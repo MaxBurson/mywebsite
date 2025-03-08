@@ -4,10 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Max Burson | Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: white;
+            overflow-x: hidden;
+        }
+        header {
+            padding: 20px;
+            text-align: center;
+            background-color: #1f1f1f;
+            border-bottom: 1px solid #333;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #555;
+        }
+        .content {
+            padding: 40px;
+            text-align: center;
+            min-height: 60vh;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello, Webpage!</h1>
-    <p>Portfolio will be coming soon.</p>
+    <header>
+        <h1>Max Burson | Portfolio</h1>
+        <nav>
+            <button onclick="showSection('home')">Home</button>
+            <button onclick="showSection('experience')">Job Experience</button>
+            <button onclick="showSection('projects')">Programming Projects</button>
+        </nav>
+    </header>
+    <main>
+        <section id="home" class="content" style="display: block;">
+            <h2>Welcome to Max's portfolio.</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tincidunt metus sit amet felis blandit, a tempus ligula scelerisque.</p>
+        </section>
+        <section id="experience" class="content" style="display: none;">
+            <h2>Job Experience</h2>
+            <p>Sample job experience information here. You can replace this with your own content later.</p>
+        </section>
+        <section id="projects" class="content" style="display: none;">
+            <h2>Programming Projects</h2>
+            <p>Sample project information here. You can replace this with your own content later.</p>
+        </section>
+    </main>
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+    </script>
 </body>
 </html>
