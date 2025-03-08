@@ -16,18 +16,30 @@
         }
         header {
             padding: 20px;
-            text-align: center;
             background-color: #1f1f1f;
             border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .info {
+            text-align: left;
         }
         h1 {
             margin: 0;
             font-size: 2rem;
         }
-        nav {
-            display: flex;
-            justify-content: center;
+        .content {
+            padding: 40px;
+            text-align: center;
+            min-height: 60vh;
+            position: relative;
+        }
+        .floating-menu {
             margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
         }
         button {
             margin: 5px;
@@ -42,34 +54,59 @@
         button:hover {
             background-color: #555;
         }
-        .content {
-            padding: 40px;
+        .welcome-text {
+            margin-top: 10px;
+            flex: 1;
+            padding-left: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        .welcome-text h2 {
+            font-size: 2rem;
+            margin: 0px;
+            padding-left: 100px;
+        }
+        .welcome-text p {
+            font-size: 0.9rem;
+            color: #ccc;
+            max-width: 300px;
+            margin: 15px 0;
             text-align: center;
-            min-height: 60vh;
+            padding-left: 130px;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Max Burson | Portfolio</h1>
-        <nav>
-            <button onclick="showSection('home')">Home</button>
-            <button onclick="showSection('experience')">Job Experience</button>
-            <button onclick="showSection('projects')">Programming Projects</button>
-        </nav>
+        <div class="info">
+            <h1>Maxwell Burson</h1>
+            <p>19 years old | London</p>
+            <p><a href="mailto:mxburson@gmail.com" style="color: white;">mxburson@gmail.com</a> | <a href="tel:+447402052934" style="color: white;">+44 7402 052934</a></p>
+        </div>
+        <div class="welcome-text">
+            <h2>Welcome to my portfolio.</h2>
+            <p>In my website I aim to be able to provide people with more information than a typical CV/Resume by further displaying previous coding projects/jobs I have been apart of.</p>
+        </div>
     </header>
     <main>
+        <div class="floating-menu">
+            <button onclick="showSection('home')">Home</button>
+            <button onclick="showSection('experience')">Job Experience</button>
+            <button onclick="showSection('projects')">Projects</button>
+        </div>
         <section id="home" class="content" style="display: block;">
-            <h2>Welcome to Max's portfolio.</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tincidunt metus sit amet felis blandit, a tempus ligula scelerisque.</p>
+            <h2>Home Page</h2>
+            <p>Welcome to the home page.</p>
         </section>
         <section id="experience" class="content" style="display: none;">
             <h2>Job Experience</h2>
-            <p>Sample job experience information here. You can replace this with your own content later.</p>
+            <p>Welcome to the job experience page.</p>
         </section>
         <section id="projects" class="content" style="display: none;">
             <h2>Programming Projects</h2>
-            <p>Sample project information here. You can replace this with your own content later.</p>
+            <p>Welcome to the programming projects page.</p>
         </section>
     </main>
     <script>
