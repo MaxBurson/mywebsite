@@ -16,29 +16,18 @@
         }
         header {
             padding: 20px;
+            text-align: center;
             background-color: #1f1f1f;
             border-bottom: 1px solid #333;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .info {
-            text-align: left;
         }
         h1 {
             margin: 0;
             font-size: 2rem;
         }
-        .content {
-            padding: 40px;
-            text-align: center;
-            min-height: 60vh;
-            position: relative;
-        }
-        .floating-menu {
+        nav {
             margin-top: 20px;
+            margin-bottom: -15px;
             display: flex;
-            gap: 10px;
             justify-content: center;
         }
         button {
@@ -54,57 +43,40 @@
         button:hover {
             background-color: #555;
         }
-        .welcome-text {
-            margin-top: 10px;
-            flex: 1;
-            padding-left: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: center;
-        }
-        .welcome-text h2 {
-            font-size: 2rem;
-            margin: 0;
-        }
-        .welcome-text p {
-            font-size: 0.9rem;
-            color: #ccc;
-            max-width: 400px;
-            margin: 5px 0;
+        .content {
+            padding: 20px 40px;
             text-align: center;
+            min-height: 60vh;
+        }
+        .description {
+            max-width: 800px;
+            margin: 10px auto;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="info">
-            <h1>Maxwell Burson</h1>
-            <p>19 years old | South London</p>
-            <p><a href="mailto:mxburson@gmail.com" style="color: white;">mxburson@gmail.com</a> | <a href="tel:+447402052934" style="color: white;">+44 7402 052934</a></p>
-        </div>
-        <div class="welcome-text">
-            <h2>Welcome to Max Burson's portfolio.</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tincidunt metus sit amet felis blandit, a tempus ligula scelerisque.</p>
-        </div>
+        <h1>Welcome to my website</h1>
+        <p class="description">In this website I aim to provide you with details that go further than a basic CV/Resume like previous programming projects/experience. For any additional information please don't hesitate to reach out to me on the details below.</p>
     </header>
     <main>
-        <div class="floating-menu">
-            <button onclick="showSection('home')">Home</button>
+        <nav>
+            <button onclick="showSection('home')">About Me</button>
             <button onclick="showSection('experience')">Job Experience</button>
             <button onclick="showSection('projects')">Projects</button>
-        </div>
+        </nav>
         <section id="home" class="content" style="display: block;">
-            <h2>Home Page</h2>
-            <p>Welcome to the home section. You can replace this content later.</p>
+            <h2>About Me</h2>
+            <p>Welcome to the about me section. More content on the way...</p>
         </section>
         <section id="experience" class="content" style="display: none;">
             <h2>Job Experience</h2>
-            <p>Sample job experience information here. You can replace this with your own content later.</p>
+            <p>Welcome to the job experience section. More content on the way...</p>
         </section>
         <section id="projects" class="content" style="display: none;">
             <h2>Programming Projects</h2>
-            <p>Sample project information here. You can replace this with your own content later.</p>
+            <p>Welcome to the programming projects section. More content on the way...</p>
         </section>
     </main>
     <script>
