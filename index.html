@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tash's Dissertation</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .start-screen {
+            display: block;
+        }
+
+        .game-screen {
+            display: none;
+        }
+
+        .complete-screen {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 2rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .info-text {
+            color: #333;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+        }
+
+        .round-counter {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .timer {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #764ba2;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .words-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .word-button {
+            padding: 1.5rem 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border: 3px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .word-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .word-button:active {
+            transform: translateY(-2px);
+        }
+
+        .word-button.correct {
+            animation: pulse 0.5s ease;
+            border-color: #10b981;
+            background: #d1fae5;
+        }
+
+        .word-button.wrong {
+            animation: shake 0.5s ease;
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+
+        .word-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-height: 30px;
+        }
+
+        .feedback.correct {
+            color: #10b981;
+        }
+
+        .feedback.wrong {
+            color: #ef4444;
+        }
+
+        .instruction {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .complete-message {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            color: #555;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 2rem 1.5rem;
+            }
+
+            .words-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+
+            .word-button {
+                padding: 1rem 0.5rem;
+                font-size: 1.2rem;
+            }
+
+            .game-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tash's Dissertation</h1>
+        
+        <div class="card start-screen" id="startScreen">
+            <p class="info-text">Welcome to the Color-Word Attention Task!</p>
+            <p class="info-text">You will complete a trial of 10 rounds. In each round, you'll see 8 color words displayed in different colors.</p>
+            <p class="info-text"><strong>Your task:</strong> Find and click the word where the text matches its color (e.g., the word "RED" displayed in red).</p>
+            <p class="info-text">Click quickly and accurately. Your response time will be measured!</p>
+            <button class="btn" onclick="startGame()">Start Trial</button>
+        </div>
+
+        <div class="card game-screen" id="gameScreen">
+            <div class="game-info">
+                <div class="round-counter" id="roundCounter">Round 1 / 10</div>
+                <div class="timer" id="timer">0.000s</div>
+            </div>
+            <div class="instruction">
+                Click the word that matches its color
+            </div>
+            <div class="words-container" id="wordsContainer"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div class="card complete-screen" id="completeScreen">
+            <div class="complete-message">Trial Complete!</div>
+            <p class="info-text">You have successfully completed the trial rounds.</p>
+            <p class="info-text">The actual test will be added in the next phase.</p>
+        </div>
+    </div>
+
+    <script>
+        const COLORS = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown'];
+        const TOTAL_ROUNDS = 10;
+        const WORDS_PER_ROUND = 8;
+        
+        let currentRound = 0;
+        let startTime = 0;
+        let timerInterval = null;
+        let roundData = [];
+
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            currentRound = 1;
+            roundData = [];
+            startRound();
+        }
+
+        function startRound() {
+            if (currentRound > TOTAL_ROUNDS) {
+                endGame();
+                return;
+            }
+
+            document.getElementById('roundCounter').textContent = `Round ${currentRound} / ${TOTAL_ROUNDS}`;
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+            
+            generateWords();
+            startTimer();
+        }
+
+        function generateWords() {
+            const container = document.getElementById('wordsContainer');
+            container.innerHTML = '';
+
+            // Select 8 unique colors for this round
+            const selectedColors = [...COLORS].sort(() => Math.random() - 0.5).slice(0, WORDS_PER_ROUND);
+            
+            // Pick one to be the correct answer (word matches color)
+            const correctIndex = Math.floor(Math.random() * WORDS_PER_ROUND);
+            
+            selectedColors.forEach((color, index) => {
+                const button = document.createElement('button');
+                button.className = 'word-button';
+                
+                if (index === correctIndex) {
+                    // Correct answer: word matches color
+                    button.textContent = color.toUpperCase();
+                    button.style.color = color;
+                    button.dataset.correct = 'true';
+                } else {
+                    // Incorrect: word doesn't match color
+                    button.textContent = color.toUpperCase();
+                    // Pick a different color for display
+                    let displayColor;
+                    do {
+                        displayColor = selectedColors[Math.floor(Math.random() * selectedColors.length)];
+                    } while (displayColor === color);
+                    button.style.color = displayColor;
+                    button.dataset.correct = 'false';
+                }
+                
+                button.onclick = () => handleWordClick(button);
+                container.appendChild(button);
+            });
+        }
+
+        function handleWordClick(button) {
+            const isCorrect = button.dataset.correct === 'true';
+            const responseTime = stopTimer();
+            
+            // Disable all buttons
+            const allButtons = document.querySelectorAll('.word-button');
+            allButtons.forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                button.classList.add('correct');
+                document.getElementById('feedback').textContent = '✓ Correct!';
+                document.getElementById('feedback').className = 'feedback correct';
+                
+                roundData.push({
+                    round: currentRound,
+                    responseTime: responseTime,
+                    correct: true
+                });
+
+                // Move to next round after a short delay
+                setTimeout(() => {
+                    currentRound++;
+                    startRound();
+                }, 1000);
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('feedback').textContent = '✗ Wrong - Try again!';
+                document.getElementById('feedback').className = 'feedback wrong';
+                
+                // Re-enable buttons after feedback
+                setTimeout(() => {
+                    button.classList.remove('wrong');
+                    allButtons.forEach(btn => btn.disabled = false);
+                    document.getElementById('feedback').textContent = '';
+                    startTimer(); // Restart timer for retry
+                }, 800);
+            }
+        }
+
+        function startTimer() {
+            startTime = performance.now();
+            const timerDisplay = document.getElementById('timer');
+            
+            timerInterval = setInterval(() => {
+                const elapsed = (performance.now() - startTime) / 1000;
+                timerDisplay.textContent = elapsed.toFixed(3) + 's';
+            }, 10);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            return ((performance.now() - startTime) / 1000).toFixed(3);
+        }
+
+        function endGame() {
+            stopTimer();
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('completeScreen').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
