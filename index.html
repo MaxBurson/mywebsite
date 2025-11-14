@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tash's Dissertation</title>
+    <title>Max's Website</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -255,17 +255,17 @@
         <h1>Tash's Dissertation</h1>
         
         <div class="card start-screen" id="startScreen">
-            <p class="info-text">Welcome to the Color-Word Attention Task!</p>
-            <p class="info-text">You will complete a trial of 10 rounds. In each round, you'll see 8 color words displayed in different colors.</p>
+            <p class="info-text">Colour-attentive game.</p>
+            <p class="info-text">Trial of 10 rounds, then 50 rounds for the actual test.</p>
             <p class="info-text"><strong>Your task:</strong> Find and click the word where the text matches its color (e.g., the word "RED" displayed in red).</p>
-            <p class="info-text">Click quickly and accurately. Your response time will be measured!</p>
+            <p class="info-text">The response time will be displayed in ms at the top.</p>
             <button class="btn" onclick="startGame()">Start Trial</button>
         </div>
 
         <div class="card game-screen" id="gameScreen">
             <div class="game-info">
                 <div class="round-counter" id="roundCounter">Round 1 / 10</div>
-                <div class="timer" id="timer">0.000s</div>
+                <div class="timer" id="timer">0ms</div>
             </div>
             <div class="instruction">
                 Click the word that matches its color
@@ -393,8 +393,8 @@
             const timerDisplay = document.getElementById('timer');
             
             timerInterval = setInterval(() => {
-                const elapsed = (performance.now() - startTime) / 1000;
-                timerDisplay.textContent = elapsed.toFixed(3) + 's';
+                const elapsed = Math.round(performance.now() - startTime);
+                timerDisplay.textContent = elapsed + 'ms';
             }, 10);
         }
 
@@ -403,7 +403,7 @@
                 clearInterval(timerInterval);
                 timerInterval = null;
             }
-            return ((performance.now() - startTime) / 1000).toFixed(3);
+            return Math.round(performance.now() - startTime);
         }
 
         function endGame() {
