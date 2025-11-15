@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Max's Website</title>
+    <title>Maxwell Burson - Portfolio</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,36 +13,241 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        #navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        #navbar.scrolled {
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        #hero {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            color: white;
-            padding: 20px;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            overflow: hidden;
         }
 
-        .container {
-            max-width: 900px;
-            width: 100%;
+        #hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            top: -250px;
+            right: -250px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        #hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(118, 75, 162, 0.1) 0%, transparent 70%);
+            bottom: -200px;
+            left: -200px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            padding: 0 2rem;
             text-align: center;
+            z-index: 1;
         }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            animation: fadeInDown 0.6s ease-out;
+        .hero-text h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        @keyframes fadeInDown {
+        .subtitle {
+            font-size: 1.8rem;
+            color: #a0a0a0;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #c0c0c0;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+        }
+
+        .arrow-down {
+            width: 20px;
+            height: 20px;
+            border-right: 2px solid #667eea;
+            border-bottom: 2px solid #667eea;
+            transform: rotate(45deg);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Fade-in animations */
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        .fade-in-delay-1 {
+            animation: fadeIn 1s ease-out 0.2s both;
+        }
+
+        .fade-in-delay-2 {
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        .fade-in-delay-3 {
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -50,367 +255,687 @@
             }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Sections */
+        section {
+            padding: 6rem 0;
+            position: relative;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .start-screen {
-            display: block;
-        }
-
-        .game-screen {
-            display: none;
-        }
-
-        .complete-screen {
-            display: none;
-        }
-
-        .btn {
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 4rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 1rem 3rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* About Section */
+        #about {
+            background: #0f0f0f;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #c0c0c0;
+            margin-bottom: 2rem;
+        }
+
+        .skills-section {
             margin-top: 2rem;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .info-text {
-            color: #333;
-            font-size: 1.1rem;
-            line-height: 1.8;
+        .skills-section h3 {
+            font-size: 1.5rem;
             margin-bottom: 1rem;
+            color: #fff;
         }
 
-        .game-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 10px;
-        }
-
-        .round-counter {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #667eea;
-        }
-
-        .timer {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #764ba2;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .words-container {
+        .skills-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1rem;
-            margin: 2rem 0;
-            animation: fadeIn 0.4s ease-out;
+            margin-bottom: 2rem;
         }
 
-        .word-button {
-            padding: 1.5rem 1rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            border: 3px solid transparent;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        .skill-item {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
         }
 
-        .word-button:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-            border-color: rgba(102, 126, 234, 0.3);
+        .skill-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-3px);
         }
 
-        .word-button:active {
-            transform: translateY(-2px);
+        .language-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .word-button.correct {
-            animation: pulse 0.5s ease;
-            border-color: #10b981;
-            background: #d1fae5;
-        }
-
-        .word-button.wrong {
-            animation: shake 0.5s ease;
-            border-color: #ef4444;
-            background: #fee2e2;
-        }
-
-        .word-button:disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .feedback {
-            margin-top: 1rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            min-height: 30px;
-        }
-
-        .feedback.correct {
-            color: #10b981;
-        }
-
-        .feedback.wrong {
-            color: #ef4444;
-        }
-
-        .instruction {
-            color: #555;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
+        .language-item {
+            display: flex;
+            justify-content: space-between;
             padding: 1rem;
             background: rgba(102, 126, 234, 0.05);
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-radius: 10px;
+            border-left: 3px solid #667eea;
         }
 
-        .complete-message {
-            color: #333;
+        .language-name {
+            font-weight: 600;
+        }
+
+        .language-level {
+            color: #a0a0a0;
+        }
+
+        .about-education h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+
+        .education-item {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .education-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(10px);
+        }
+
+        .education-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .education-header h4 {
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .date {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .institution {
+            color: #a0a0a0;
+            margin-bottom: 0.3rem;
+        }
+
+        .detail {
+            color: #808080;
+            font-size: 0.9rem;
+        }
+
+        /* Experience Section */
+        #experience {
+            background: #0a0a0a;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: #667eea;
+            border-radius: 50%;
+            border: 3px solid #0a0a0a;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        .timeline-content {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(10px);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-header h3 {
             font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .role {
+            color: #667eea;
             font-weight: 600;
             margin-bottom: 1rem;
         }
 
-        .stats {
-            color: #555;
-            font-size: 1.1rem;
-            margin: 1rem 0;
+        .timeline-content .description {
+            color: #c0c0c0;
+            line-height: 1.8;
+            font-size: 1rem;
+            margin: 0;
         }
 
+        /* Projects Section */
+        #projects {
+            background: #0f0f0f;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-10px);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .project-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .project-description {
+            color: #c0c0c0;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Contact Section */
+        #contact {
+            background: #0a0a0a;
+        }
+
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .contact-item {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .contact-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-details h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .contact-details a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-details a:hover {
+            color: #764ba2;
+        }
+
+        .contact-details p {
+            color: #c0c0c0;
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 2rem 0;
+            text-align: center;
+            color: #808080;
+        }
+
+        /* Scroll animations */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .scroll-animate.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            h1 {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.3rem;
+            }
+
+            .description {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
                 font-size: 2rem;
             }
 
-            .card {
-                padding: 2rem 1.5rem;
-            }
-
-            .words-container {
+            .skills-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.8rem;
-            }
-
-            .word-button {
-                padding: 1rem 0.5rem;
-                font-size: 1.2rem;
-            }
-
-            .game-info {
-                flex-direction: column;
-                gap: 0.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Tash's Dissertation</h1>
-        
-        <div class="card start-screen" id="startScreen">
-            <p class="info-text">Colour-attentive game.</p>
-            <p class="info-text">Trial of 10 rounds, then 50 rounds for the actual test.</p>
-            <p class="info-text"><strong>Your task:</strong> Find and click the word where the text matches its color (e.g., the word "RED" displayed in red).</p>
-            <p class="info-text">The response time will be displayed in ms at the top.</p>
-            <button class="btn" onclick="startGame()">Start Trial</button>
-        </div>
-
-        <div class="card game-screen" id="gameScreen">
-            <div class="game-info">
-                <div class="round-counter" id="roundCounter">Round 1 / 10</div>
-                <div class="timer" id="timer">0ms</div>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">MB</a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
             </div>
-            <div class="instruction">
-                Click the word that matches its color
-            </div>
-            <div class="words-container" id="wordsContainer"></div>
-            <div class="feedback" id="feedback"></div>
         </div>
+    </nav>
 
-        <div class="card complete-screen" id="completeScreen">
-            <div class="complete-message">Trial Complete!</div>
-            <p class="info-text">You have successfully completed the trial rounds.</p>
-            <p class="info-text">The actual test will be added in the next phase.</p>
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="fade-in">Maxwell Burson</h1>
+                <p class="subtitle fade-in-delay-1">BSc Computer Science Student</p>
+                <p class="description fade-in-delay-2">Enthusiastic 20-year-old fueling passion for coding and technology by developing programs to solve daily challenges.</p>
+                <div class="hero-buttons fade-in-delay-3">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="scroll-indicator">
+            <span>Scroll Down</span>
+            <div class="arrow-down"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I am an enthusiastic 20-year-old, that's constantly fueling my passion for coding and technology by developing my own programs, to solve daily challenges. Coming from a technology-based background, I've learnt fundamental technological skills through my own projects and University projects, which have allowed me to build strong skills in both teamwork and communication.</p>
+                    
+                    <div class="skills-section">
+                        <h3>Technical Skills</h3>
+                        <div class="skills-grid">
+                            <div class="skill-item">Python</div>
+                            <div class="skill-item">Java</div>
+                            <div class="skill-item">Artificial Intelligence</div>
+                            <div class="skill-item">Machine Learning</div>
+                            <div class="skill-item">Databases</div>
+                            <div class="skill-item">Team Projects</div>
+                        </div>
+                    </div>
+
+                    <div class="skills-section">
+                        <h3>Soft Skills</h3>
+                        <div class="skills-grid">
+                            <div class="skill-item">Technical Adaptability</div>
+                            <div class="skill-item">Teamwork</div>
+                            <div class="skill-item">Problem-solving</div>
+                            <div class="skill-item">Effective Communication</div>
+                            <div class="skill-item">Time Management</div>
+                        </div>
+                    </div>
+
+                    <div class="skills-section">
+                        <h3>Languages</h3>
+                        <div class="language-list">
+                            <div class="language-item">
+                                <span class="language-name">English</span>
+                                <span class="language-level">Native</span>
+                            </div>
+                            <div class="language-item">
+                                <span class="language-name">Spanish</span>
+                                <span class="language-level">Conversational</span>
+                            </div>
+                            <div class="language-item">
+                                <span class="language-name">Dutch</span>
+                                <span class="language-level">Basics</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-education">
+                    <h3>Education</h3>
+                    <div class="education-item">
+                        <div class="education-header">
+                            <h4>Bachelor of Computer Science</h4>
+                            <span class="date">2023-2026</span>
+                        </div>
+                        <p class="institution">School of Informatics | University of Sussex</p>
+                        <p class="detail">Expected May 2026</p>
+                    </div>
+                    <div class="education-item">
+                        <div class="education-header">
+                            <h4>7 GCSEs and 3 A Levels</h4>
+                            <span class="date">2016-2023</span>
+                        </div>
+                        <p class="institution">Royal Russell School</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience">
+        <div class="container">
+            <h2 class="section-title">Work Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3>CodeNinjas</h3>
+                            <span class="date">May 2025 - Present</span>
+                        </div>
+                        <p class="role">Coding Teacher</p>
+                        <p class="description">Working as a coding teacher in a classroom environment. In this job, I get to mainly practice my skills of programming and problem-solving. In addition to this I learn how to effectively communicate my point to others, and the ability to re-word complex problems into more understandable ways.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3>Sainsburys</h3>
+                            <span class="date">June 2023 - June 2024</span>
+                        </div>
+                        <p class="role">Shop Floor Assistant</p>
+                        <p class="description">Working as a shop floor assistant. Again in this job I practiced confidence, but also various customer service by interacting with customers on a regular basis and helping them with different queries and needs.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3>Go Paintball London</h3>
+                            <span class="date">April 2022 - July 2023</span>
+                        </div>
+                        <p class="role">Event Staff</p>
+                        <p class="description">Working as event staff at a paintball/events venue. In this job I learn key skills, mainly confidence due to public speaking infront of crowds of players. Beyond this I learn how to effectively communicate in a team in a very fast pace environment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-icon">📱</div>
+                    <h3>UniSplit'r</h3>
+                    <p class="project-description">Uploaded an app on the Apple Appstore, 'UniSplit'r' allowing University housemates to use a shared groupchat, shared calendar, split bills... Even scan receipts and uses OCR and AI to split the individual items!</p>
+                    <div class="project-tags">
+                        <span class="tag">iOS</span>
+                        <span class="tag">OCR</span>
+                        <span class="tag">AI</span>
+                        <span class="tag">Swift</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-icon">🎮</div>
+                    <h3>2D Game with AI NPCs</h3>
+                    <p class="project-description">My current University Dissertation Project to create a 2D game that uses AI LLMs to produce NPC dialogue. See my website for more details on both of these and more.</p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">AI/ML</span>
+                        <span class="tag">Game Dev</span>
+                        <span class="tag">LLMs</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-icon">🌐</div>
+                    <h3>Portfolio Website</h3>
+                    <p class="project-description">This website! Built with modern web technologies, featuring smooth animations and responsive design to showcase my work and experience.</p>
+                    <div class="project-tags">
+                        <span class="tag">HTML</span>
+                        <span class="tag">CSS</span>
+                        <span class="tag">JavaScript</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <a href="mailto:mxburson@gmail.com">mxburson@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <a href="tel:+447402052934">+44 7402 052934</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">🌐</div>
+                        <div class="contact-details">
+                            <h4>Website</h4>
+                            <a href="https://maxburson.co.uk" target="_blank">maxburson.co.uk</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>4 Sandhurst Close</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Maxwell Burson. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script>
-        const COLORS = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown'];
-        const TOTAL_ROUNDS = 10;
-        const WORDS_PER_ROUND = 8;
-        
-        let currentRound = 0;
-        let startTime = 0;
-        let timerInterval = null;
-        let roundData = [];
-
-        function startGame() {
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'block';
-            currentRound = 1;
-            roundData = [];
-            startRound();
-        }
-
-        function startRound() {
-            if (currentRound > TOTAL_ROUNDS) {
-                endGame();
-                return;
-            }
-
-            document.getElementById('roundCounter').textContent = `Round ${currentRound} / ${TOTAL_ROUNDS}`;
-            document.getElementById('feedback').textContent = '';
-            document.getElementById('feedback').className = 'feedback';
-            
-            generateWords();
-            startTimer();
-        }
-
-        function generateWords() {
-            const container = document.getElementById('wordsContainer');
-            container.innerHTML = '';
-
-            // Select 8 unique colors for this round
-            const selectedColors = [...COLORS].sort(() => Math.random() - 0.5).slice(0, WORDS_PER_ROUND);
-            
-            // Pick one to be the correct answer (word matches color)
-            const correctIndex = Math.floor(Math.random() * WORDS_PER_ROUND);
-            
-            selectedColors.forEach((color, index) => {
-                const button = document.createElement('button');
-                button.className = 'word-button';
-                
-                if (index === correctIndex) {
-                    // Correct answer: word matches color
-                    button.textContent = color.toUpperCase();
-                    button.style.color = color;
-                    button.dataset.correct = 'true';
-                } else {
-                    // Incorrect: word doesn't match color
-                    button.textContent = color.toUpperCase();
-                    // Pick a different color for display
-                    let displayColor;
-                    do {
-                        displayColor = selectedColors[Math.floor(Math.random() * selectedColors.length)];
-                    } while (displayColor === color);
-                    button.style.color = displayColor;
-                    button.dataset.correct = 'false';
-                }
-                
-                button.onclick = () => handleWordClick(button);
-                container.appendChild(button);
-            });
-        }
-
-        function handleWordClick(button) {
-            const isCorrect = button.dataset.correct === 'true';
-            const responseTime = stopTimer();
-            
-            // Disable all buttons
-            const allButtons = document.querySelectorAll('.word-button');
-            allButtons.forEach(btn => btn.disabled = true);
-
-            if (isCorrect) {
-                button.classList.add('correct');
-                document.getElementById('feedback').textContent = '✓ Correct!';
-                document.getElementById('feedback').className = 'feedback correct';
-                
-                roundData.push({
-                    round: currentRound,
-                    responseTime: responseTime,
-                    correct: true
-                });
-
-                // Move to next round after a short delay
-                setTimeout(() => {
-                    currentRound++;
-                    startRound();
-                }, 1000);
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
             } else {
-                button.classList.add('wrong');
-                document.getElementById('feedback').textContent = '✗ Wrong - Try again!';
-                document.getElementById('feedback').className = 'feedback wrong';
-                
-                // Re-enable buttons after feedback
-                setTimeout(() => {
-                    button.classList.remove('wrong');
-                    allButtons.forEach(btn => btn.disabled = false);
-                    document.getElementById('feedback').textContent = '';
-                    startTimer(); // Restart timer for retry
-                }, 800);
+                navbar.classList.remove('scrolled');
             }
-        }
+        });
 
-        function startTimer() {
-            startTime = performance.now();
-            const timerDisplay = document.getElementById('timer');
-            
-            timerInterval = setInterval(() => {
-                const elapsed = Math.round(performance.now() - startTime);
-                timerDisplay.textContent = elapsed + 'ms';
-            }, 10);
-        }
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
 
-        function stopTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections and cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.timeline-item, .project-card, .education-item, .skill-item, .contact-item');
+            animateElements.forEach(el => {
+                el.classList.add('scroll-animate');
+                observer.observe(el);
+            });
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.getElementById('hero');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
             }
-            return Math.round(performance.now() - startTime);
-        }
-
-        function endGame() {
-            stopTimer();
-            document.getElementById('gameScreen').style.display = 'none';
-            document.getElementById('completeScreen').style.display = 'block';
-        }
+        });
     </script>
 </body>
 </html>
