@@ -109,16 +109,16 @@ body {
     letter-spacing: 1px;
 }
 
-.likert-option input[type="radio"]:checked + span {
-    background: #ffffff;
-    color: #000000;
-    border-color: #ffffff;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-}
-
 .likert-option span:hover {
     border-color: #ffffff;
     background: rgba(255, 255, 255, 0.1);
+}
+
+.likert-option input[type="radio"]:checked + span {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3) !important;
 }
 
 .likert-labels {
