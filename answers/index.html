@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Questionnaire Responses</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>ADMIN DASHBOARD</h1>
+            <p class="subtitle">Questionnaire Responses</p>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalResponses">0</span>
+                    <span class="stat-label">Total Responses</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="exportBtn" class="control-btn">EXPORT TO CSV</button>
+            <button id="clearAllBtn" class="control-btn danger">CLEAR ALL DATA</button>
+        </div>
+
+        <div id="responsesContainer" class="responses-container">
+            <!-- Responses will be dynamically inserted here -->
+        </div>
+
+        <div id="emptyState" class="empty-state">
+            <h2>NO RESPONSES YET</h2>
+            <p>Responses will appear here once users complete the questionnaire.</p>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
