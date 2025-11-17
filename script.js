@@ -2,6 +2,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('questionnaireForm');
     const successMessage = document.getElementById('successMessage');
 
+    // Make clicking on the span select the radio button
+    document.querySelectorAll('.likert-option span').forEach(span => {
+        span.addEventListener('click', function() {
+            const radio = this.previousElementSibling;
+            if (radio && radio.type === 'radio') {
+                radio.checked = true;
+            }
+        });
+    });
+
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -48,16 +58,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Save back to localStorage
         localStorage.setItem('questionnaireResponses', JSON.stringify(allResponses));
 
-        // Show success message
-        successMessage.classList.add('show');
+        // Scroll to top smoothly
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+        // Show success message after scroll starts
+        setTimeout(function() {
+            successMessage.classList.add('show');
+        }, 300);
 
         // Reset form
         form.reset();
 
-        // Hide success message after 3 seconds
+        // Hide success message after 4 seconds
         setTimeout(function() {
             successMessage.classList.remove('show');
-        }, 3000);
+        }, 4000);
     });
 
     // Add smooth scroll behavior
