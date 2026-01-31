@@ -1,93 +1,154 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('questionnaireForm');
-    const successMessage = document.getElementById('successMessage');
+    const questionContainer = document.getElementById('questionContainer');
+    const questionText = document.getElementById('questionText');
+    const answerContainer = document.getElementById('answerContainer');
+    const nextButton = document.getElementById('nextButton');
+    const currentQuestionSpan = document.getElementById('currentQuestion');
+    const totalQuestionsSpan = document.getElementById('totalQuestions');
+    const completionMessage = document.getElementById('completionMessage');
+    const evaluationContainer = document.getElementById('evaluationContainer');
 
-    // Make clicking on the span select the radio button
-    document.querySelectorAll('.likert-option span').forEach(span => {
-        span.addEventListener('click', function() {
-            const radio = this.previousElementSibling;
-            if (radio && radio.type === 'radio') {
-                radio.checked = true;
+    const questions = [
+        {
+            id: 'response_quality',
+            text: 'How would you rate the clarity, relevance, and usefulness of the NPC\'s responses?',
+            type: 'rating',
+            required: true
+        },
+        {
+            id: 'consistency_character',
+            text: 'Did the NPC stay in character and behave consistently throughout the conversation?',
+            type: 'rating',
+            required: true
+        },
+        {
+            id: 'context_awareness',
+            text: 'How well did the NPC remember and respond appropriately to earlier parts of the conversation?',
+            type: 'rating',
+            required: true
+        },
+        {
+            id: 'engagement',
+            text: 'How interesting or enjoyable was the conversation overall?',
+            type: 'rating',
+            required: true
+        },
+        {
+            id: 'responsiveness',
+            text: 'How fast did the NPC\'s responses feel from your perspective?',
+            type: 'rating',
+            required: true
+        },
+        {
+            id: 'problems_issues',
+            text: 'Did the NPC repeat itself, forget things, hallucinate information, or behave in a confusing way?',
+            type: 'text',
+            required: false
+        },
+        {
+            id: 'overall_impression',
+            text: 'How does this NPC compare to other NPCs you have talked to so far?',
+            type: 'rating',
+            required: true
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let responses = {};
+
+    totalQuestionsSpan.textContent = questions.length;
+
+    function displayQuestion() {
+        const question = questions[currentQuestionIndex];
+        currentQuestionSpan.textContent = currentQuestionIndex + 1;
+        questionText.textContent = question.text;
+        
+        answerContainer.innerHTML = '';
+        nextButton.disabled = true;
+
+        if (question.type === 'rating') {
+            const ratingContainer = document.createElement('div');
+            ratingContainer.className = 'rating-container';
+            
+            const ratingLabel = document.createElement('div');
+            ratingLabel.className = 'rating-label';
+            ratingLabel.textContent = 'Please respond with a number from 1 to 5:';
+            ratingContainer.appendChild(ratingLabel);
+
+            const ratingOptions = document.createElement('div');
+            ratingOptions.className = 'rating-options';
+
+            for (let i = 1; i <= 5; i++) {
+                const option = document.createElement('div');
+                option.className = 'rating-option';
+                option.textContent = i;
+                option.addEventListener('click', function() {
+                    selectRating(i);
+                });
+                ratingOptions.appendChild(option);
+            }
+
+            ratingContainer.appendChild(ratingOptions);
+            answerContainer.appendChild(ratingContainer);
+        } else if (question.type === 'text') {
+            const textArea = document.createElement('textarea');
+            textArea.className = 'text-answer';
+            textArea.rows = 4;
+            textArea.placeholder = 'Please provide a short written response (optional)...';
+            textArea.addEventListener('input', function() {
+                responses[question.id] = this.value;
+                nextButton.disabled = false;
+            });
+            answerContainer.appendChild(textArea);
+        }
+
+        if (responses[question.id]) {
+            if (question.type === 'rating') {
+                selectRating(responses[question.id]);
+            } else if (question.type === 'text') {
+                textArea.value = responses[question.id];
+                nextButton.disabled = false;
+            }
+        }
+    }
+
+    function selectRating(value) {
+        const question = questions[currentQuestionIndex];
+        responses[question.id] = value;
+
+        const ratingOptions = document.querySelectorAll('.rating-option');
+        ratingOptions.forEach(option => {
+            option.classList.remove('selected');
+            if (option.textContent == value) {
+                option.classList.add('selected');
             }
         });
+
+        nextButton.disabled = false;
+    }
+
+    nextButton.addEventListener('click', function() {
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            displayQuestion();
+        } else {
+            completeEvaluation();
+        }
     });
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        // Collect form data
-        const formData = new FormData(form);
-        const responses = {
+    function completeEvaluation() {
+        const evaluationData = {
             timestamp: new Date().toISOString(),
-            sectionA: {
-                q1: formData.get('a1'),
-                q2: formData.get('a2'),
-                q3: formData.get('a3'),
-                q4: formData.get('a4'),
-                q5: formData.get('a5')
-            },
-            sectionB: {
-                q1: formData.get('b1'),
-                q2: formData.get('b2'),
-                q3: formData.get('b3'),
-                q4: formData.get('b4'),
-                q5: formData.get('b5')
-            },
-            sectionC: {
-                q1: formData.get('c1'),
-                q2: formData.get('c2'),
-                q3: formData.get('c3'),
-                q4: formData.get('c4'),
-                q5: formData.get('c5')
-            },
-            sectionD: {
-                q1: formData.get('d1'),
-                q2: formData.get('d2'),
-                q3: formData.get('d3'),
-                q4: formData.get('d4'),
-                q5: formData.get('d5')
-            }
+            responses: responses
         };
 
-        // Get existing responses from localStorage
-        let allResponses = JSON.parse(localStorage.getItem('questionnaireResponses') || '[]');
-        
-        // Add new response
-        allResponses.push(responses);
-        
-        // Save back to localStorage
-        localStorage.setItem('questionnaireResponses', JSON.stringify(allResponses));
+        let allEvaluations = JSON.parse(localStorage.getItem('evaluationResponses') || '[]');
+        allEvaluations.push(evaluationData);
+        localStorage.setItem('evaluationResponses', JSON.stringify(allEvaluations));
 
-        // Scroll to top smoothly
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        questionContainer.style.display = 'none';
+        completionMessage.style.display = 'block';
+    }
 
-        // Show success message after scroll starts
-        setTimeout(function() {
-            successMessage.classList.add('show');
-        }, 300);
-
-        // Reset form
-        form.reset();
-
-        // Hide success message after 4 seconds
-        setTimeout(function() {
-            successMessage.classList.remove('show');
-        }, 4000);
-    });
-
-    // Add smooth scroll behavior
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
+    displayQuestion();
 });

@@ -46,91 +46,81 @@ body {
     text-transform: uppercase;
 }
 
-.section {
-    margin-bottom: 60px;
-    padding: 30px;
+.question-container {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
+    padding: 40px;
+    margin-bottom: 40px;
+    animation: fadeIn 0.5s ease;
 }
 
-.section h2 {
-    font-size: 1.5rem;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
-    color: #ffffff;
+.question-number {
+    font-size: 0.9rem;
+    color: #888888;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
     text-transform: uppercase;
 }
 
-.section-subtitle {
-    font-size: 0.85rem;
-    color: #888888;
+.question-text {
+    font-size: 1.3rem;
+    line-height: 1.8;
     margin-bottom: 30px;
-    letter-spacing: 1px;
-}
-
-.question {
-    margin-bottom: 35px;
-}
-
-.question label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 15px;
     color: #ffffff;
     letter-spacing: 0.5px;
 }
 
-.likert {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 8px;
+.answer-container {
+    margin-bottom: 30px;
 }
 
-.likert-option {
-    flex: 1;
+.rating-container {
     text-align: center;
 }
 
-.likert-option input[type="radio"] {
-    display: none;
+.rating-label {
+    font-size: 0.9rem;
+    color: #888888;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
 }
 
-.likert-option span {
-    display: block;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+.rating-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.rating-option {
+    width: 60px;
+    height: 60px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.05);
 }
 
-.likert-option span:hover {
+.rating-option:hover {
     border-color: #ffffff;
     background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
 }
 
-.likert-option input[type="radio"]:checked + span {
-    background: #ffffff !important;
-    color: #000000 !important;
-    border-color: #ffffff !important;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3) !important;
+.rating-option.selected {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
-.likert-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    color: #888888;
-    letter-spacing: 1px;
-    margin-top: 5px;
-}
-
-.question.open-ended textarea {
+.text-answer {
     width: 100%;
     padding: 15px;
     background: rgba(255, 255, 255, 0.05);
@@ -144,23 +134,23 @@ body {
     letter-spacing: 0.5px;
 }
 
-.question.open-ended textarea:focus {
+.text-answer:focus {
     outline: none;
     border-color: #ffffff;
     background: rgba(255, 255, 255, 0.08);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
-.question.open-ended textarea::placeholder {
+.text-answer::placeholder {
     color: #555555;
 }
 
-.submit-btn {
+.next-btn {
     width: 100%;
     padding: 20px;
-    background: #ffffff;
-    color: #000000;
-    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 4px;
     font-family: 'Gilroy-Bold', sans-serif;
     font-size: 1.2rem;
@@ -168,37 +158,46 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
-    margin-top: 40px;
 }
 
-.submit-btn:hover {
-    background: #000000;
-    color: #ffffff;
-    border: 2px solid #ffffff;
+.next-btn:hover:not(:disabled) {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
 }
 
-.submit-btn:active {
+.next-btn:active:not(:disabled) {
     transform: scale(0.98);
 }
 
-.success-message {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.98);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-    animation: fadeIn 0.3s ease;
+.next-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
-.success-message.show {
-    display: flex;
+.completion-message {
+    text-align: center;
+    padding: 60px 40px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 3px solid #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+    animation: fadeIn 0.5s ease;
+}
+
+.completion-content h2 {
+    font-size: 3.5rem;
+    letter-spacing: 5px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.completion-content p {
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    color: #ffffff;
 }
 
 @keyframes fadeIn {
@@ -221,50 +220,35 @@ body {
     }
 }
 
-.success-content {
-    text-align: center;
-    padding: 60px 80px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 3px solid #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
-    animation: slideUp 0.4s ease;
-}
-
-.success-content h2 {
-    font-size: 3.5rem;
-    letter-spacing: 5px;
-    margin-bottom: 20px;
-    color: #ffffff;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-}
-
-.success-content p {
-    font-size: 1.3rem;
-    letter-spacing: 2px;
-    color: #ffffff;
-}
-
 @media (max-width: 768px) {
     .header h1 {
         font-size: 2rem;
         letter-spacing: 2px;
     }
     
-    .section {
-        padding: 20px;
+    .question-container {
+        padding: 30px 20px;
     }
     
-    .likert {
-        gap: 5px;
+    .question-text {
+        font-size: 1.1rem;
     }
     
-    .likert-option span {
-        padding: 10px;
-        font-size: 0.9rem;
+    .rating-options {
+        gap: 10px;
     }
     
-    .likert-labels {
-        font-size: 0.65rem;
+    .rating-option {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+    }
+    
+    .completion-content h2 {
+        font-size: 2.5rem;
+    }
+    
+    .completion-content p {
+        font-size: 1.1rem;
     }
 }
