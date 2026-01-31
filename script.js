@@ -487,6 +487,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function completeSession() {
+        const evaluationData = {
+            sessionId: currentSession,
+            participantName: currentParticipantName,
+            timestamp: new Date().toISOString(),
+            responses: responses
+        };
 
         let allEvaluations = JSON.parse(localStorage.getItem('evaluationResponses') || '[]');
         allEvaluations.push(evaluationData);

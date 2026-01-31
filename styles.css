@@ -302,8 +302,14 @@ body {
     transform: scale(1.05);
 }
 
+.rating-option.selected {
+    background: rgba(100, 255, 100, 0.3);
+    border-color: rgba(100, 255, 100, 0.5);
+    box-shadow: 0 0 20px rgba(100, 255, 100, 0.2);
+}
+
 .rating-option.selected .rating-number {
-    color: #000000;
+    color: #64ff64;
 }
 
 .text-answer {
