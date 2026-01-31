@@ -140,11 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
             label: 'Responsiveness',
             low: 'Slowest',
             high: 'Fastest'
-        },
-        'overall_impression': {
-            label: 'Overall Impression',
-            low: 'Worst',
-            high: 'Best'
         }
     };
 
@@ -351,7 +346,6 @@ document.addEventListener('DOMContentLoaded', function() {
             totalContextAwareness += parseInt(responses.context_awareness) || 0;
             totalEngagement += parseInt(responses.engagement) || 0;
             totalResponsiveness += parseInt(responses.responsiveness) || 0;
-            totalOverall += parseInt(responses.overall_impression) || 0;
             
             if (responses.problems_issues && responses.problems_issues.trim()) {
                 stats.problemReports++;
@@ -412,10 +406,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="rating-item">
                         <span class="rating-label">Responsiveness:</span>
                         <span class="rating-value">${responses.responsiveness || 'N/A'}/5</span>
-                    </div>
-                    <div class="rating-item">
-                        <span class="rating-label">Overall:</span>
-                        <span class="rating-value">${responses.overall_impression || 'N/A'}/5</span>
                     </div>
                 </div>
             </div>

@@ -22,47 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let keysPressed = {};
     let currentParticipantName = '';
 
-    totalQuestionsSpan.textContent = questions.length;
-
-    // Name input handling
-    participantNameInput.addEventListener('input', function() {
-        const name = this.value.trim();
-        startEvaluationBtn.disabled = name.length === 0;
-    });
-
-    startEvaluationBtn.addEventListener('click', function() {
-        const name = participantNameInput.value.trim();
-        if (name.length > 0) {
-            currentParticipantName = name;
-            participantNameSpan.textContent = name;
-            showWelcome();
-        }
-    });
-
-    participantNameInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && !startEvaluationBtn.disabled) {
-            startEvaluationBtn.click();
-        }
-    });
-
-    function showNameInput() {
-        nameInputContainer.style.display = 'block';
-        welcomeMessage.style.display = 'none';
-        questionContainer.style.display = 'none';
-        completionMessage.style.display = 'none';
-        finalCompletionMessage.style.display = 'none';
-        document.querySelector('.session-buttons').style.display = 'none';
-    }
-
-    function showWelcome() {
-        nameInputContainer.style.display = 'none';
-        welcomeMessage.style.display = 'block';
-        questionContainer.style.display = 'none';
-        completionMessage.style.display = 'none';
-        finalCompletionMessage.style.display = 'none';
-        document.querySelector('.session-buttons').style.display = 'block';
-    }
-
     const questions = [
         {
             id: 'response_quality',
@@ -99,14 +58,45 @@ document.addEventListener('DOMContentLoaded', function() {
             text: 'Did the NPC repeat itself, forget things, hallucinate information, or behave in a confusing way?',
             type: 'text',
             required: false
-        },
-        {
-            id: 'overall_impression',
-            text: 'How does this NPC compare to other NPCs you have talked to so far?',
-            type: 'rating',
-            required: true
         }
     ];
+
+    totalQuestionsSpan.textContent = questions.length;
+
+    // Name input handling
+    console.log('Setting up name input handlers');
+    console.log('participantNameInput:', participantNameInput);
+    console.log('startEvaluationBtn:', startEvaluationBtn);
+    
+    if (!participantNameInput || !startEvaluationBtn) {
+        console.error('Required elements not found!');
+        return;
+    }
+
+    participantNameInput.addEventListener('input', function() {
+        const name = this.value.trim();
+        console.log('Name input:', name, 'Length:', name.length);
+        startEvaluationBtn.disabled = name.length === 0;
+        console.log('Button disabled:', startEvaluationBtn.disabled);
+        console.log('Button classes:', startEvaluationBtn.className);
+    });
+
+    startEvaluationBtn.addEventListener('click', function() {
+        const name = participantNameInput.value.trim();
+        console.log('Start button clicked, name:', name);
+        if (name.length > 0) {
+            currentParticipantName = name;
+            participantNameSpan.textContent = name;
+            showWelcome();
+        }
+    });
+
+    participantNameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !startEvaluationBtn.disabled) {
+            console.log('Enter key pressed');
+            startEvaluationBtn.click();
+        }
+    });
 
     // Keyboard shortcut for mini menu (Z + Q)
     document.addEventListener('keydown', function(event) {
@@ -213,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentSession = null;
         responses = {};
         currentQuestionIndex = 0;
+        currentParticipantName = ''; // Reset participant name
         
         // Clear session data from localStorage
         localStorage.removeItem('evaluationSessions');
@@ -237,8 +228,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update session buttons reference
         sessionButtons = document.querySelectorAll('.session-btn');
         
-        // Show welcome screen for fresh user
-        showWelcome();
+        // Go back to name input screen for new participant
+        showNameInput();
         
         // Show a brief notification
         showNotification('New participant session created!');
@@ -307,11 +298,17 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('evaluationSessions', JSON.stringify(sessionData));
     }
 
-    function showWelcome() {
-        welcomeMessage.style.display = 'block';
+    function showNameInput() {
+        nameInputContainer.style.display = 'block';
+        welcomeMessage.style.display = 'none';
         questionContainer.style.display = 'none';
         completionMessage.style.display = 'none';
         finalCompletionMessage.style.display = 'none';
+        document.querySelector('.session-buttons').style.display = 'none';
+        
+        // Clear the name input field
+        participantNameInput.value = '';
+        startEvaluationBtn.disabled = true;
     }
 
     function showQuestions() {
@@ -340,39 +337,6 @@ document.addEventListener('DOMContentLoaded', function() {
         currentQuestionIndex = 0;
         responses = {};
         showQuestions();
-        displayQuestion();
-    }
-
-    const questionLabels = {
-        'response_quality': {
-            low: 'Least Clear/Useful',
-            high: 'Most Clear/Useful'
-        },
-        'consistency_character': {
-            low: 'Least Consistent',
-            high: 'Most Consistent'
-        },
-        'context_awareness': {
-            low: 'Least Aware',
-            high: 'Most Aware'
-        },
-        'engagement': {
-            low: 'Least Engaging',
-            high: 'Most Engaging'
-        },
-        'responsiveness': {
-            low: 'Slowest',
-            high: 'Fastest'
-        },
-        'overall_impression': {
-            low: 'Worst',
-            high: 'Best'
-        }
-    };
-
-    function displayQuestion() {
-        const question = questions[currentQuestionIndex];
-        currentQuestionSpan.textContent = currentQuestionIndex + 1;
         questionText.textContent = question.text;
         
         answerContainer.innerHTML = '';
