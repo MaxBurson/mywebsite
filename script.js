@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const welcomeMessage = document.getElementById('welcomeMessage');
     const questionContainer = document.getElementById('questionContainer');
     const questionText = document.getElementById('questionText');
     const answerContainer = document.getElementById('answerContainer');
@@ -6,7 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentQuestionSpan = document.getElementById('currentQuestion');
     const totalQuestionsSpan = document.getElementById('totalQuestions');
     const completionMessage = document.getElementById('completionMessage');
+    const finalCompletionMessage = document.getElementById('finalCompletionMessage');
     const evaluationContainer = document.getElementById('evaluationContainer');
+    const sessionButtons = document.querySelectorAll('.session-btn');
 
     const questions = [
         {
@@ -54,9 +57,81 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     let currentQuestionIndex = 0;
+    let currentSession = null;
     let responses = {};
+    let completedSessions = [];
 
     totalQuestionsSpan.textContent = questions.length;
+
+    function initializeSessions() {
+        const savedData = localStorage.getItem('evaluationSessions');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            completedSessions = data.completedSessions || [];
+            updateSessionButtons();
+        }
+    }
+
+    function updateSessionButtons() {
+        sessionButtons.forEach(button => {
+            const sessionNum = parseInt(button.dataset.session);
+            if (completedSessions.includes(sessionNum)) {
+                button.classList.add('completed');
+                button.disabled = true;
+            } else {
+                button.classList.remove('completed');
+                button.disabled = false;
+            }
+        });
+
+        if (completedSessions.length === 8) {
+            showFinalCompletion();
+        }
+    }
+
+    function saveSessionData() {
+        const sessionData = {
+            completedSessions: completedSessions,
+            lastUpdated: new Date().toISOString()
+        };
+        localStorage.setItem('evaluationSessions', JSON.stringify(sessionData));
+    }
+
+    function showWelcome() {
+        welcomeMessage.style.display = 'block';
+        questionContainer.style.display = 'none';
+        completionMessage.style.display = 'none';
+        finalCompletionMessage.style.display = 'none';
+    }
+
+    function showQuestions() {
+        welcomeMessage.style.display = 'none';
+        questionContainer.style.display = 'block';
+        completionMessage.style.display = 'none';
+        finalCompletionMessage.style.display = 'none';
+    }
+
+    function showCompletion() {
+        welcomeMessage.style.display = 'none';
+        questionContainer.style.display = 'none';
+        completionMessage.style.display = 'block';
+        finalCompletionMessage.style.display = 'none';
+    }
+
+    function showFinalCompletion() {
+        welcomeMessage.style.display = 'none';
+        questionContainer.style.display = 'none';
+        completionMessage.style.display = 'none';
+        finalCompletionMessage.style.display = 'block';
+    }
+
+    function startSession(sessionNum) {
+        currentSession = sessionNum;
+        currentQuestionIndex = 0;
+        responses = {};
+        showQuestions();
+        displayQuestion();
+    }
 
     function displayQuestion() {
         const question = questions[currentQuestionIndex];
@@ -127,17 +202,9 @@ document.addEventListener('DOMContentLoaded', function() {
         nextButton.disabled = false;
     }
 
-    nextButton.addEventListener('click', function() {
-        if (currentQuestionIndex < questions.length - 1) {
-            currentQuestionIndex++;
-            displayQuestion();
-        } else {
-            completeEvaluation();
-        }
-    });
-
-    function completeEvaluation() {
+    function completeSession() {
         const evaluationData = {
+            sessionId: currentSession,
             timestamp: new Date().toISOString(),
             responses: responses
         };
@@ -146,9 +213,42 @@ document.addEventListener('DOMContentLoaded', function() {
         allEvaluations.push(evaluationData);
         localStorage.setItem('evaluationResponses', JSON.stringify(allEvaluations));
 
-        questionContainer.style.display = 'none';
-        completionMessage.style.display = 'block';
+        if (!completedSessions.includes(currentSession)) {
+            completedSessions.push(currentSession);
+            completedSessions.sort((a, b) => a - b);
+            saveSessionData();
+            updateSessionButtons();
+        }
+
+        if (completedSessions.length === 8) {
+            showFinalCompletion();
+        } else {
+            showCompletion();
+        }
     }
 
-    displayQuestion();
+    sessionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const sessionNum = parseInt(this.dataset.session);
+            if (!completedSessions.includes(sessionNum)) {
+                startSession(sessionNum);
+            }
+        });
+    });
+
+    nextButton.addEventListener('click', function() {
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            displayQuestion();
+        } else {
+            completeSession();
+        }
+    });
+
+    initializeSessions();
+    if (completedSessions.length === 8) {
+        showFinalCompletion();
+    } else {
+        showWelcome();
+    }
 });

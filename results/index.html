@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluation Results - Max's Dissertation Research</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>EVALUATION RESULTS</h1>
+            <p class="subtitle">Max's Dissertation Research</p>
+        </div>
+
+        <div id="resultsContainer">
+            <div id="loadingMessage" class="loading-message">
+                <div class="loading-content">
+                    <h2>Loading Results...</h2>
+                    <p>Please wait while we compile the evaluation data.</p>
+                </div>
+            </div>
+
+            <div id="resultsContent" class="results-content" style="display: none;">
+                <div class="summary-section">
+                    <h2>Summary Statistics</h2>
+                    <div id="summaryStats" class="stats-grid"></div>
+                </div>
+
+                <div class="sessions-section">
+                    <h2>Session Details</h2>
+                    <div id="sessionDetails" class="session-list"></div>
+                </div>
+
+                <div class="export-section">
+                    <button id="exportButton" class="export-btn">Export Results (JSON)</button>
+                </div>
+            </div>
+
+            <div id="noResultsMessage" class="no-results-message" style="display: none;">
+                <div class="no-results-content">
+                    <h2>No Results Available</h2>
+                    <p>No evaluation data has been collected yet.</p>
+                    <a href="../" class="back-link">Return to Evaluation</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="results.js"></script>
+</body>
+</html>

@@ -14,8 +14,28 @@
             <p class="subtitle">NPC Performance Assessment</p>
         </div>
 
+        <div class="session-buttons">
+            <div class="session-buttons-container">
+                <button class="session-btn" data-session="1">1</button>
+                <button class="session-btn" data-session="2">2</button>
+                <button class="session-btn" data-session="3">3</button>
+                <button class="session-btn" data-session="4">4</button>
+                <button class="session-btn" data-session="5">5</button>
+                <button class="session-btn" data-session="6">6</button>
+                <button class="session-btn" data-session="7">7</button>
+                <button class="session-btn" data-session="8">8</button>
+            </div>
+        </div>
+
         <div id="evaluationContainer">
-            <div id="questionContainer" class="question-container">
+            <div id="welcomeMessage" class="welcome-message">
+                <div class="welcome-content">
+                    <h2>Welcome to the Evaluation System</h2>
+                    <p>Please select a session number above to begin the post-conversation evaluation.</p>
+                </div>
+            </div>
+
+            <div id="questionContainer" class="question-container" style="display: none;">
                 <div class="question-number">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">7</span></div>
                 <div id="questionText" class="question-text"></div>
                 <div id="answerContainer" class="answer-container"></div>
@@ -24,8 +44,16 @@
 
             <div id="completionMessage" class="completion-message" style="display: none;">
                 <div class="completion-content">
-                    <h2>✓ EVALUATION COMPLETE</h2>
-                    <p>Thank you for completing the post-conversation evaluation!</p>
+                    <h2>✓ SESSION COMPLETE</h2>
+                    <p>Thank you for completing this evaluation session!</p>
+                    <p>Please select another session number above to continue.</p>
+                </div>
+            </div>
+
+            <div id="finalCompletionMessage" class="completion-message" style="display: none;">
+                <div class="completion-content">
+                    <h2>✓ ALL SESSIONS COMPLETE</h2>
+                    <p>Thank you for participating in Max's Dissertation Research!</p>
                 </div>
             </div>
         </div>
