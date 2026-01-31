@@ -164,39 +164,40 @@ document.addEventListener('DOMContentLoaded', function() {
             completeSession();
         }
 
-        // Find the next available session number
-        let nextSessionNum = 1;
-        const existingButtons = Array.from(document.querySelectorAll('.session-btn')).map(btn => parseInt(btn.dataset.session));
+        // Create a fresh user experience - reset all session data
+        completedSessions = [];
+        currentSession = null;
+        responses = {};
+        currentQuestionIndex = 0;
         
-        while (existingButtons.includes(nextSessionNum)) {
-            nextSessionNum++;
-        }
+        // Clear session data from localStorage
+        localStorage.removeItem('evaluationSessions');
         
-        // Add new session button dynamically
+        // Reset all session buttons to be unshaded and enabled
+        const allSessionButtons = document.querySelectorAll('.session-btn');
+        allSessionButtons.forEach(button => {
+            button.classList.remove('completed');
+            button.disabled = false;
+        });
+        
+        // Remove any extra session buttons (beyond 8)
         const sessionButtonsContainer = document.querySelector('.session-buttons-container');
-        const newButton = document.createElement('button');
-        newButton.className = 'session-btn';
-        newButton.dataset.session = nextSessionNum;
-        newButton.textContent = nextSessionNum;
-        
-        newButton.addEventListener('click', function() {
-            const sessionNum = parseInt(this.dataset.session);
-            if (!completedSessions.includes(sessionNum)) {
-                startSession(sessionNum);
+        const buttons = Array.from(sessionButtonsContainer.querySelectorAll('.session-btn'));
+        buttons.forEach(button => {
+            const sessionNum = parseInt(button.dataset.session);
+            if (sessionNum > 8) {
+                button.remove();
             }
         });
         
-        sessionButtonsContainer.appendChild(newButton);
-        
         // Update session buttons reference
-        const allSessionButtons = document.querySelectorAll('.session-btn');
-        sessionButtons = allSessionButtons;
+        sessionButtons = document.querySelectorAll('.session-btn');
         
-        // Start the new session immediately
-        startSession(nextSessionNum);
+        // Show welcome screen for fresh user
+        showWelcome();
         
         // Show a brief notification
-        showNotification(`New session ${nextSessionNum} created!`);
+        showNotification('New participant session created!');
     }
 
     function showNotification(message) {

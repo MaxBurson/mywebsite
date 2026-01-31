@@ -169,6 +169,7 @@ body {
     color: #888888;
     letter-spacing: 1px;
     margin-bottom: 15px;
+    margin-top: 10px;
 }
 
 .low-label {
@@ -183,7 +184,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .rating-option {
