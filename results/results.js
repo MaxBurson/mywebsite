@@ -6,6 +6,115 @@ document.addEventListener('DOMContentLoaded', function() {
     const sessionDetails = document.getElementById('sessionDetails');
     const exportButton = document.getElementById('exportButton');
 
+    // Keyboard shortcut for mini menu (Z + Q)
+    let keysPressed = {};
+    document.addEventListener('keydown', function(event) {
+        keysPressed[event.key.toLowerCase()] = true;
+        
+        // Check if Z and Q are pressed simultaneously
+        if (keysPressed['z'] && keysPressed['q']) {
+            event.preventDefault();
+            showMiniMenu();
+        }
+    });
+
+    document.addEventListener('keyup', function(event) {
+        keysPressed[event.key.toLowerCase()] = false;
+    });
+
+    function showMiniMenu() {
+        // Remove existing menu if present
+        const existingMenu = document.querySelector('.mini-menu');
+        if (existingMenu) {
+            document.body.removeChild(existingMenu);
+            return;
+        }
+
+        const miniMenu = document.createElement('div');
+        miniMenu.className = 'mini-menu';
+        miniMenu.innerHTML = `
+            <div class="mini-menu-content">
+                <div class="mini-menu-header">Data Options</div>
+                <button class="mini-menu-btn delete-all-btn" id="deleteAllBtn">Delete All Data</button>
+                <button class="mini-menu-btn export-btn" id="exportDataBtn">Export Results</button>
+                <button class="mini-menu-btn close-btn" id="closeMenuBtn">Close</button>
+            </div>
+        `;
+        
+        document.body.appendChild(miniMenu);
+
+        // Add event listeners
+        document.getElementById('deleteAllBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete ALL evaluation data? This action cannot be undone.')) {
+                deleteAllData();
+                document.body.removeChild(miniMenu);
+            }
+        });
+
+        document.getElementById('exportDataBtn').addEventListener('click', function() {
+            // Trigger existing export functionality
+            exportButton.click();
+            document.body.removeChild(miniMenu);
+        });
+
+        document.getElementById('closeMenuBtn').addEventListener('click', function() {
+            document.body.removeChild(miniMenu);
+        });
+
+        // Close menu when clicking outside
+        setTimeout(() => {
+            document.addEventListener('click', function closeMenu(e) {
+                if (!miniMenu.contains(e.target)) {
+                    document.body.removeChild(miniMenu);
+                    document.removeEventListener('click', closeMenu);
+                }
+            });
+        }, 100);
+    }
+
+    function deleteAllData() {
+        // Clear all localStorage data
+        localStorage.removeItem('evaluationResponses');
+        localStorage.removeItem('evaluationSessions');
+        
+        // Show notification
+        showNotification('All evaluation data deleted successfully!');
+        
+        // Reload the page to show empty state
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
+    }
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 100, 100, 0.2);
+            color: #ffffff;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 100, 100, 0.4);
+            border-radius: 8px;
+            font-family: 'Gilroy-Bold', sans-serif;
+            letter-spacing: 1px;
+            z-index: 1001;
+            animation: slideInRight 0.3s ease;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 2000);
+    }
+
     const questionLabels = {
         'response_quality': {
             label: 'Response Quality',
