@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         questionContainer.style.display = 'none';
         completionMessage.style.display = 'none';
         finalCompletionMessage.style.display = 'none';
+        document.querySelector('.session-buttons').style.display = 'none';
     }
 
     function showWelcome() {
@@ -59,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         questionContainer.style.display = 'none';
         completionMessage.style.display = 'none';
         finalCompletionMessage.style.display = 'none';
+        document.querySelector('.session-buttons').style.display = 'block';
     }
 
     const questions = [
