@@ -64,14 +64,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     totalQuestionsSpan.textContent = questions.length;
 
-    // Keyboard shortcut for new session (Z + Q)
+    // Keyboard shortcut for mini menu (Z + Q)
     document.addEventListener('keydown', function(event) {
         keysPressed[event.key.toLowerCase()] = true;
         
         // Check if Z and Q are pressed simultaneously
         if (keysPressed['z'] && keysPressed['q']) {
             event.preventDefault();
-            createNewSession();
+            showMiniMenu();
         }
     });
 
@@ -79,10 +79,96 @@ document.addEventListener('DOMContentLoaded', function() {
         keysPressed[event.key.toLowerCase()] = false;
     });
 
+    function showMiniMenu() {
+        // Remove existing menu if present
+        const existingMenu = document.querySelector('.mini-menu');
+        if (existingMenu) {
+            document.body.removeChild(existingMenu);
+            return;
+        }
+
+        const miniMenu = document.createElement('div');
+        miniMenu.className = 'mini-menu';
+        miniMenu.innerHTML = `
+            <div class="mini-menu-content">
+                <div class="mini-menu-header">Session Options</div>
+                <button class="mini-menu-btn delete-btn" id="deleteSessionBtn">Delete This Session</button>
+                <button class="mini-menu-btn new-btn" id="newSessionBtn">New Session</button>
+                <button class="mini-menu-btn close-btn" id="closeMenuBtn">Close</button>
+            </div>
+        `;
+        
+        document.body.appendChild(miniMenu);
+
+        // Add event listeners
+        document.getElementById('deleteSessionBtn').addEventListener('click', function() {
+            deleteCurrentSession();
+            document.body.removeChild(miniMenu);
+        });
+
+        document.getElementById('newSessionBtn').addEventListener('click', function() {
+            createNewSession();
+            document.body.removeChild(miniMenu);
+        });
+
+        document.getElementById('closeMenuBtn').addEventListener('click', function() {
+            document.body.removeChild(miniMenu);
+        });
+
+        // Close menu when clicking outside
+        setTimeout(() => {
+            document.addEventListener('click', function closeMenu(e) {
+                if (!miniMenu.contains(e.target)) {
+                    document.body.removeChild(miniMenu);
+                    document.removeEventListener('click', closeMenu);
+                }
+            });
+        }, 100);
+    }
+
+    function deleteCurrentSession() {
+        if (currentSession === null) {
+            showNotification('No active session to delete');
+            return;
+        }
+
+        // Remove session from completed sessions if it was completed
+        if (completedSessions.includes(currentSession)) {
+            completedSessions = completedSessions.filter(session => session !== currentSession);
+            saveSessionData();
+            updateSessionButtons();
+        }
+
+        // Remove session button if it exists
+        const sessionButton = document.querySelector(`[data-session="${currentSession}"]`);
+        if (sessionButton) {
+            sessionButton.remove();
+        }
+
+        // Remove session data from localStorage
+        let allEvaluations = JSON.parse(localStorage.getItem('evaluationResponses') || '[]');
+        allEvaluations = allEvaluations.filter(evaluation => evaluation.sessionId !== currentSession);
+        localStorage.setItem('evaluationResponses', JSON.stringify(allEvaluations));
+
+        showNotification(`Session ${currentSession} deleted!`);
+        
+        // Reset to welcome screen
+        currentSession = null;
+        responses = {};
+        showWelcome();
+    }
+
     function createNewSession() {
-        // Find the next available session number (9, 10, 11, etc.)
+        // Save current session if it has data
+        if (currentSession !== null && Object.keys(responses).length > 0) {
+            completeSession();
+        }
+
+        // Find the next available session number
         let nextSessionNum = 1;
-        while (completedSessions.includes(nextSessionNum)) {
+        const existingButtons = Array.from(document.querySelectorAll('.session-btn')).map(btn => parseInt(btn.dataset.session));
+        
+        while (existingButtons.includes(nextSessionNum)) {
             nextSessionNum++;
         }
         
