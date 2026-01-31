@@ -68,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displaySummaryStats(evaluations) {
-        const stats = calculateStats(evaluations);
         const totalSurveys = evaluations.length;
         const participants = Math.ceil(evaluations.length / 8);
         
@@ -80,34 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="stat-card">
                 <div class="stat-number">${totalSurveys}</div>
                 <div class="stat-label">Total Surveys</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">${stats.avgResponseQuality.toFixed(1)}</div>
-                <div class="stat-label">Avg Response Quality</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">${stats.avgConsistency.toFixed(1)}</div>
-                <div class="stat-label">Avg Consistency</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">${stats.avgContextAwareness.toFixed(1)}</div>
-                <div class="stat-label">Avg Context Awareness</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">${stats.avgEngagement.toFixed(1)}</div>
-                <div class="stat-label">Avg Engagement</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">${stats.avgResponsiveness.toFixed(1)}</div>
-                <div class="stat-label">Avg Responsiveness</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">${stats.avgOverall.toFixed(1)}</div>
-                <div class="stat-label">Avg Overall Impression</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">${stats.problemReports}</div>
-                <div class="stat-label">Problem Reports</div>
             </div>
         `;
     }

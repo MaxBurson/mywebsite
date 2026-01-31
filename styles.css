@@ -156,6 +156,29 @@ body {
     letter-spacing: 1px;
 }
 
+.rating-scale {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rating-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #888888;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.low-label {
+    color: #ff6464;
+}
+
+.high-label {
+    color: #64ff64;
+}
+
 .rating-options {
     display: flex;
     justify-content: center;

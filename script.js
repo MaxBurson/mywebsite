@@ -133,6 +133,33 @@ document.addEventListener('DOMContentLoaded', function() {
         displayQuestion();
     }
 
+    const questionLabels = {
+        'response_quality': {
+            low: 'Least Clear/Useful',
+            high: 'Most Clear/Useful'
+        },
+        'consistency_character': {
+            low: 'Least Consistent',
+            high: 'Most Consistent'
+        },
+        'context_awareness': {
+            low: 'Least Aware',
+            high: 'Most Aware'
+        },
+        'engagement': {
+            low: 'Least Engaging',
+            high: 'Most Engaging'
+        },
+        'responsiveness': {
+            low: 'Slowest',
+            high: 'Fastest'
+        },
+        'overall_impression': {
+            low: 'Worst',
+            high: 'Best'
+        }
+    };
+
     function displayQuestion() {
         const question = questions[currentQuestionIndex];
         currentQuestionSpan.textContent = currentQuestionIndex + 1;
@@ -150,6 +177,20 @@ document.addEventListener('DOMContentLoaded', function() {
             ratingLabel.textContent = 'Please respond with a number from 1 to 5:';
             ratingContainer.appendChild(ratingLabel);
 
+            const ratingScale = document.createElement('div');
+            ratingScale.className = 'rating-scale';
+            
+            const labels = questionLabels[question.id];
+            if (labels) {
+                const ratingLabels = document.createElement('div');
+                ratingLabels.className = 'rating-labels';
+                ratingLabels.innerHTML = `
+                    <span class="low-label">${labels.low}</span>
+                    <span class="high-label">${labels.high}</span>
+                `;
+                ratingScale.appendChild(ratingLabels);
+            }
+
             const ratingOptions = document.createElement('div');
             ratingOptions.className = 'rating-options';
 
@@ -163,7 +204,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 ratingOptions.appendChild(option);
             }
 
-            ratingContainer.appendChild(ratingOptions);
+            ratingScale.appendChild(ratingOptions);
+            ratingContainer.appendChild(ratingScale);
             answerContainer.appendChild(ratingContainer);
         } else if (question.type === 'text') {
             const textArea = document.createElement('textarea');
