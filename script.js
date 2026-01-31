@@ -61,6 +61,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
 
+    const questionLabels = {
+        'response_quality': {
+            label: 'Response Quality',
+            low: 'Least Clear/Useful',
+            high: 'Most Clear/Useful'
+        },
+        'consistency_character': {
+            label: 'Consistency & Character',
+            low: 'Least Consistent',
+            high: 'Most Consistent'
+        },
+        'context_awareness': {
+            label: 'Context Awareness',
+            low: 'Least Aware',
+            high: 'Most Aware'
+        },
+        'engagement': {
+            label: 'Engagement',
+            low: 'Least Engaging',
+            high: 'Most Engaging'
+        },
+        'responsiveness': {
+            label: 'Responsiveness',
+            low: 'Slowest',
+            high: 'Fastest'
+        }
+    };
+
     totalQuestionsSpan.textContent = questions.length;
 
     // Name input handling
@@ -84,10 +112,19 @@ document.addEventListener('DOMContentLoaded', function() {
     startEvaluationBtn.addEventListener('click', function() {
         const name = participantNameInput.value.trim();
         console.log('Start button clicked, name:', name);
+        console.log('Name length:', name.length);
+        console.log('Current participant name before:', currentParticipantName);
+        console.log('Participant span element:', participantNameSpan);
+        
         if (name.length > 0) {
             currentParticipantName = name;
+            console.log('Set currentParticipantName to:', currentParticipantName);
             participantNameSpan.textContent = name;
+            console.log('Set participantNameSpan.textContent to:', participantNameSpan.textContent);
+            console.log('About to call showWelcome()');
             showWelcome();
+        } else {
+            console.log('Name was empty, not proceeding');
         }
     });
 
@@ -299,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showNameInput() {
+        console.log('showNameInput() called');
         nameInputContainer.style.display = 'block';
         welcomeMessage.style.display = 'none';
         questionContainer.style.display = 'none';
@@ -311,11 +349,18 @@ document.addEventListener('DOMContentLoaded', function() {
         startEvaluationBtn.disabled = true;
     }
 
-    function showQuestions() {
-        welcomeMessage.style.display = 'none';
-        questionContainer.style.display = 'block';
+    function showWelcome() {
+        console.log('showWelcome() called');
+        console.log('Hiding nameInputContainer');
+        nameInputContainer.style.display = 'none';
+        console.log('Showing welcomeMessage');
+        welcomeMessage.style.display = 'block';
+        questionContainer.style.display = 'none';
         completionMessage.style.display = 'none';
         finalCompletionMessage.style.display = 'none';
+        console.log('Showing session buttons');
+        document.querySelector('.session-buttons').style.display = 'block';
+        console.log('showWelcome() completed');
     }
 
     function showCompletion() {
@@ -332,11 +377,32 @@ document.addEventListener('DOMContentLoaded', function() {
         finalCompletionMessage.style.display = 'block';
     }
 
+    function showQuestions() {
+        console.log('showQuestions() called');
+        nameInputContainer.style.display = 'none';
+        welcomeMessage.style.display = 'none';
+        questionContainer.style.display = 'block';
+        completionMessage.style.display = 'none';
+        finalCompletionMessage.style.display = 'none';
+        console.log('showQuestions() completed');
+    }
+
     function startSession(sessionNum) {
+        console.log('startSession called with sessionNum:', sessionNum);
         currentSession = sessionNum;
         currentQuestionIndex = 0;
         responses = {};
+        console.log('About to call showQuestions()');
         showQuestions();
+        console.log('About to call displayQuestion()');
+        displayQuestion();
+    }
+
+    function displayQuestion() {
+        const question = questions[currentQuestionIndex];
+        console.log('Displaying question:', question);
+        
+        currentQuestionSpan.textContent = currentQuestionIndex + 1;
         questionText.textContent = question.text;
         
         answerContainer.innerHTML = '';
@@ -367,39 +433,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const ratingOptions = document.createElement('div');
             ratingOptions.className = 'rating-options';
-
+            
             for (let i = 1; i <= 5; i++) {
-                const option = document.createElement('div');
-                option.className = 'rating-option';
-                option.textContent = i;
-                option.addEventListener('click', function() {
-                    selectRating(i);
+                const ratingOption = document.createElement('div');
+                ratingOption.className = 'rating-option';
+                ratingOption.innerHTML = `<span class="rating-number">${i}</span>`;
+                ratingOptions.appendChild(ratingOption);
+                
+                ratingOption.addEventListener('click', function() {
+                    responses[question.id] = i;
+                    nextButton.disabled = false;
+                    
+                    // Visual feedback
+                    document.querySelectorAll('.rating-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
                 });
-                ratingOptions.appendChild(option);
             }
-
+            
             ratingScale.appendChild(ratingOptions);
             ratingContainer.appendChild(ratingScale);
             answerContainer.appendChild(ratingContainer);
+            
         } else if (question.type === 'text') {
             const textArea = document.createElement('textarea');
+            textArea.id = question.id;
             textArea.className = 'text-answer';
+            textArea.placeholder = 'Please describe any issues...';
             textArea.rows = 4;
-            textArea.placeholder = 'Please provide a short written response (optional)...';
             textArea.addEventListener('input', function() {
                 responses[question.id] = this.value;
+                // Enable next button if there's content (optional question)
                 nextButton.disabled = false;
             });
             answerContainer.appendChild(textArea);
-        }
-
-        if (responses[question.id]) {
-            if (question.type === 'rating') {
-                selectRating(responses[question.id]);
-            } else if (question.type === 'text') {
-                textArea.value = responses[question.id];
-                nextButton.disabled = false;
-            }
         }
     }
 
@@ -419,12 +487,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function completeSession() {
-        const evaluationData = {
-            sessionId: currentSession,
-            participantName: currentParticipantName,
-            timestamp: new Date().toISOString(),
-            responses: responses
-        };
 
         let allEvaluations = JSON.parse(localStorage.getItem('evaluationResponses') || '[]');
         allEvaluations.push(evaluationData);
@@ -447,8 +509,15 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionButtons.forEach(button => {
         button.addEventListener('click', function() {
             const sessionNum = parseInt(this.dataset.session);
+            console.log('Session button clicked:', sessionNum);
+            console.log('Completed sessions:', completedSessions);
+            console.log('Is session completed?', completedSessions.includes(sessionNum));
+            
             if (!completedSessions.includes(sessionNum)) {
+                console.log('Starting session:', sessionNum);
                 startSession(sessionNum);
+            } else {
+                console.log('Session already completed, not starting');
             }
         });
     });
