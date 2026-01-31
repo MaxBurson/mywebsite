@@ -69,7 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displaySummaryStats(evaluations) {
         const totalSurveys = evaluations.length;
-        const participants = Math.ceil(evaluations.length / 8);
+        
+        // Calculate participants based on unique session groups
+        // Each participant is identified by having sessions 1-8
+        const participants = calculateParticipants(evaluations);
         
         summaryStats.innerHTML = `
             <div class="stat-card">
@@ -81,6 +84,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="stat-label">Total Surveys</div>
             </div>
         `;
+    }
+
+    function calculateParticipants(evaluations) {
+        if (evaluations.length === 0) return 0;
+        
+        // Group sessions by participant based on completion patterns
+        // A participant is counted if they have at least one session completed
+        const sessionNumbers = evaluations.map(e => e.sessionId);
+        const uniqueSessionNumbers = [...new Set(sessionNumbers)];
+        
+        // Estimate participants based on session completion patterns
+        // If we see sessions 1-8, that's likely 1 participant
+        // If we see sessions 1-8 and then 1-8 again, that's likely 2 participants
+        // This is a heuristic approach since we don't have explicit participant IDs
+        
+        // Count how many times we see session 1 (indicating new participants)
+        const sessionOnes = evaluations.filter(e => e.sessionId === 1).length;
+        return Math.max(sessionOnes, 1);
     }
 
     function calculateStats(evaluations) {
