@@ -28,9 +28,20 @@
         </div>
 
         <div id="evaluationContainer">
-            <div id="welcomeMessage" class="welcome-message">
-                <div class="welcome-content">
+            <div id="nameInputContainer" class="name-input-container">
+                <div class="name-input-content">
                     <h2>Welcome to the Evaluation System</h2>
+                    <p>Please enter your name to begin:</p>
+                    <div class="name-input-group">
+                        <input type="text" id="participantNameInput" class="name-input" placeholder="Enter your name..." maxlength="50">
+                        <button id="startEvaluationBtn" class="start-btn" disabled>Start Evaluation</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="welcomeMessage" class="welcome-message" style="display: none;">
+                <div class="welcome-content">
+                    <h2>Welcome, <span id="participantName"></span>!</h2>
                     <p>Please select a session number above to begin the post-conversation evaluation.</p>
                 </div>
             </div>

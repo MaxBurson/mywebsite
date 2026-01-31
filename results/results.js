@@ -63,15 +63,12 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsContent.style.display = 'block';
 
         displaySummaryStats(evaluations);
-        displaySessionDetails(evaluations);
+        displayParticipantsList(evaluations);
         setupExport(evaluations);
     }
 
     function displaySummaryStats(evaluations) {
         const totalSurveys = evaluations.length;
-        
-        // Calculate participants based on unique session groups
-        // Each participant is identified by having sessions 1-8
         const participants = calculateParticipants(evaluations);
         
         summaryStats.innerHTML = `
@@ -89,19 +86,132 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateParticipants(evaluations) {
         if (evaluations.length === 0) return 0;
         
-        // Group sessions by participant based on completion patterns
-        // A participant is counted if they have at least one session completed
-        const sessionNumbers = evaluations.map(e => e.sessionId);
-        const uniqueSessionNumbers = [...new Set(sessionNumbers)];
+        // Count unique participant names
+        const uniqueNames = [...new Set(evaluations.map(e => e.participantName))];
+        return uniqueNames.length;
+    }
+
+    function displayParticipantsList(evaluations) {
+        sessionDetails.innerHTML = '';
         
-        // Estimate participants based on session completion patterns
-        // If we see sessions 1-8, that's likely 1 participant
-        // If we see sessions 1-8 and then 1-8 again, that's likely 2 participants
-        // This is a heuristic approach since we don't have explicit participant IDs
+        // Group evaluations by participant name
+        const participantsMap = {};
+        evaluations.forEach(evaluation => {
+            const name = evaluation.participantName;
+            if (!participantsMap[name]) {
+                participantsMap[name] = [];
+            }
+            participantsMap[name].push(evaluation);
+        });
         
-        // Count how many times we see session 1 (indicating new participants)
-        const sessionOnes = evaluations.filter(e => e.sessionId === 1).length;
-        return Math.max(sessionOnes, 1);
+        // Create participant cards
+        Object.keys(participantsMap).forEach(participantName => {
+            const participantEvaluations = participantsMap[participantName];
+            const participantCard = createParticipantCard(participantName, participantEvaluations);
+            sessionDetails.appendChild(participantCard);
+        });
+    }
+
+    function createParticipantCard(participantName, evaluations) {
+        const card = document.createElement('div');
+        card.className = 'participant-card clickable';
+        
+        const totalSurveys = evaluations.length;
+        const completedSessions = evaluations.map(e => e.sessionId).sort((a, b) => a - b);
+        const latestDate = new Date(Math.max(...evaluations.map(e => new Date(e.timestamp))));
+        
+        card.innerHTML = `
+            <div class="participant-header">
+                <h3>${participantName}</h3>
+                <div class="participant-stats">
+                    <span class="survey-count">${totalSurveys} surveys</span>
+                    <span class="latest-date">Last: ${latestDate.toLocaleDateString()}</span>
+                </div>
+            </div>
+            <div class="participant-sessions">
+                <div class="sessions-label">Completed sessions:</div>
+                <div class="sessions-list">
+                    ${completedSessions.map(sessionId => `<span class="session-badge">${sessionId}</span>`).join('')}
+                </div>
+            </div>
+            <div class="expand-indicator">Click to view details →</div>
+        `;
+        
+        card.addEventListener('click', function() {
+            showParticipantDetails(participantName, evaluations);
+        });
+        
+        return card;
+    }
+
+    function showParticipantDetails(participantName, evaluations) {
+        const modal = document.createElement('div');
+        modal.className = 'session-modal';
+        modal.innerHTML = `
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>${participantName} - Evaluation Details</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="participant-info">
+                        <div class="participant-summary">
+                            <span class="total-surveys">${evaluations.length} total surveys</span>
+                            <span class="date-range">${new Date(Math.min(...evaluations.map(e => new Date(e.timestamp)))).toLocaleDateString()} - ${new Date(Math.max(...evaluations.map(e => new Date(e.timestamp)))).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                    <div class="evaluations-list">
+                        ${evaluations.sort((a, b) => a.sessionId - b.sessionId).map(evaluation => createEvaluationCard(evaluation)).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        modal.querySelector('.close-modal').addEventListener('click', function() {
+            document.body.removeChild(modal);
+        });
+        
+        modal.querySelector('.modal-overlay').addEventListener('click', function() {
+            document.body.removeChild(modal);
+        });
+    }
+
+    function createEvaluationCard(evaluation) {
+        const responses = evaluation.responses;
+        const date = new Date(evaluation.timestamp);
+        
+        return `
+            <div class="evaluation-card">
+                <div class="evaluation-header">
+                    <h4>Session ${evaluation.sessionId}</h4>
+                    <div class="evaluation-date">${date.toLocaleString()}</div>
+                </div>
+                <div class="evaluation-ratings">
+                    ${Object.keys(questionLabels).map(key => {
+                        const labelInfo = questionLabels[key];
+                        const value = responses[key];
+                        if (value) {
+                            return `
+                                <div class="rating-item">
+                                    <span class="rating-label">${labelInfo.label}:</span>
+                                    <span class="rating-value">${value}/5</span>
+                                </div>
+                            `;
+                        }
+                        return '';
+                    }).join('')}
+                </div>
+                ${responses.problems_issues ? `
+                    <div class="problems-section">
+                        <h5>Issues Reported:</h5>
+                        <p class="problems-text">${responses.problems_issues}</p>
+                    </div>
+                ` : ''}
+            </div>
+        `;
     }
 
     function calculateStats(evaluations) {

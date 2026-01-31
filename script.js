@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const nameInputContainer = document.getElementById('nameInputContainer');
+    const participantNameInput = document.getElementById('participantNameInput');
+    const startEvaluationBtn = document.getElementById('startEvaluationBtn');
+    const participantNameSpan = document.getElementById('participantName');
     const welcomeMessage = document.getElementById('welcomeMessage');
     const questionContainer = document.getElementById('questionContainer');
     const questionText = document.getElementById('questionText');
@@ -10,6 +14,52 @@ document.addEventListener('DOMContentLoaded', function() {
     const finalCompletionMessage = document.getElementById('finalCompletionMessage');
     const evaluationContainer = document.getElementById('evaluationContainer');
     const sessionButtons = document.querySelectorAll('.session-btn');
+
+    let currentQuestionIndex = 0;
+    let currentSession = null;
+    let responses = {};
+    let completedSessions = [];
+    let keysPressed = {};
+    let currentParticipantName = '';
+
+    totalQuestionsSpan.textContent = questions.length;
+
+    // Name input handling
+    participantNameInput.addEventListener('input', function() {
+        const name = this.value.trim();
+        startEvaluationBtn.disabled = name.length === 0;
+    });
+
+    startEvaluationBtn.addEventListener('click', function() {
+        const name = participantNameInput.value.trim();
+        if (name.length > 0) {
+            currentParticipantName = name;
+            participantNameSpan.textContent = name;
+            showWelcome();
+        }
+    });
+
+    participantNameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !startEvaluationBtn.disabled) {
+            startEvaluationBtn.click();
+        }
+    });
+
+    function showNameInput() {
+        nameInputContainer.style.display = 'block';
+        welcomeMessage.style.display = 'none';
+        questionContainer.style.display = 'none';
+        completionMessage.style.display = 'none';
+        finalCompletionMessage.style.display = 'none';
+    }
+
+    function showWelcome() {
+        nameInputContainer.style.display = 'none';
+        welcomeMessage.style.display = 'block';
+        questionContainer.style.display = 'none';
+        completionMessage.style.display = 'none';
+        finalCompletionMessage.style.display = 'none';
+    }
 
     const questions = [
         {
@@ -55,14 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
             required: true
         }
     ];
-
-    let currentQuestionIndex = 0;
-    let currentSession = null;
-    let responses = {};
-    let completedSessions = [];
-    let keysPressed = {};
-
-    totalQuestionsSpan.textContent = questions.length;
 
     // Keyboard shortcut for mini menu (Z + Q)
     document.addEventListener('keydown', function(event) {
@@ -413,6 +455,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function completeSession() {
         const evaluationData = {
             sessionId: currentSession,
+            participantName: currentParticipantName,
             timestamp: new Date().toISOString(),
             responses: responses
         };
@@ -454,7 +497,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     initializeSessions();
-    if (completedSessions.length === 8) {
+    if (currentParticipantName === '') {
+        showNameInput();
+    } else if (completedSessions.length === 8) {
         showFinalCompletion();
     } else {
         showWelcome();
