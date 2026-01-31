@@ -60,8 +60,87 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentSession = null;
     let responses = {};
     let completedSessions = [];
+    let keysPressed = {};
 
     totalQuestionsSpan.textContent = questions.length;
+
+    // Keyboard shortcut for new session (Z + Q)
+    document.addEventListener('keydown', function(event) {
+        keysPressed[event.key.toLowerCase()] = true;
+        
+        // Check if Z and Q are pressed simultaneously
+        if (keysPressed['z'] && keysPressed['q']) {
+            event.preventDefault();
+            createNewSession();
+        }
+    });
+
+    document.addEventListener('keyup', function(event) {
+        keysPressed[event.key.toLowerCase()] = false;
+    });
+
+    function createNewSession() {
+        // Find the next available session number (9, 10, 11, etc.)
+        let nextSessionNum = 1;
+        while (completedSessions.includes(nextSessionNum)) {
+            nextSessionNum++;
+        }
+        
+        // Add new session button dynamically
+        const sessionButtonsContainer = document.querySelector('.session-buttons-container');
+        const newButton = document.createElement('button');
+        newButton.className = 'session-btn';
+        newButton.dataset.session = nextSessionNum;
+        newButton.textContent = nextSessionNum;
+        
+        newButton.addEventListener('click', function() {
+            const sessionNum = parseInt(this.dataset.session);
+            if (!completedSessions.includes(sessionNum)) {
+                startSession(sessionNum);
+            }
+        });
+        
+        sessionButtonsContainer.appendChild(newButton);
+        
+        // Update session buttons reference
+        const allSessionButtons = document.querySelectorAll('.session-btn');
+        sessionButtons = allSessionButtons;
+        
+        // Start the new session immediately
+        startSession(nextSessionNum);
+        
+        // Show a brief notification
+        showNotification(`New session ${nextSessionNum} created!`);
+    }
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-family: 'Gilroy-Bold', sans-serif;
+            letter-spacing: 1px;
+            z-index: 1001;
+            animation: slideInRight 0.3s ease;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 2000);
+    }
 
     function initializeSessions() {
         const savedData = localStorage.getItem('evaluationSessions');
