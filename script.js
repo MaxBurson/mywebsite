@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Supabase client
     const SUPABASE_URL = 'https://ckvoydadpgnrcvuxgfat.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrdm95ZGFkcGducmN2dXhnZmF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg3NzI3MjAsImV4cCI6MjA1NDM0ODcyMH0.ieIoX2RxvZOBegmiZGNx2g_u0nq35I2';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrdm95ZGFkcGducmN2dXhnZmF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMDg1ODgsImV4cCI6MjA4NTg4NDU4OH0.gsyIb9z75KMEF8ybAyRVHgR7w9wuSjAkjkXXLJ7wT8g';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const nameInputContainer = document.getElementById('nameInputContainer');
@@ -26,6 +26,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let completedSessions = [];
     let keysPressed = {};
     let currentParticipantName = '';
+
+    // Clear old localStorage session data on page load
+    const savedSessions = JSON.parse(localStorage.getItem('evaluationSessions') || '{}');
+    if (savedSessions.completedSessions) {
+        completedSessions = savedSessions.completedSessions;
+    }
 
     const questions = [
         {
@@ -194,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Close menu when clicking outside
         setTimeout(() => {
             document.addEventListener('click', function closeMenu(e) {
-                if (!miniMenu.contains(e.target)) {
+                if (miniMenu && miniMenu.parentNode && !miniMenu.contains(e.target)) {
                     document.body.removeChild(miniMenu);
                     document.removeEventListener('click', closeMenu);
                 }
