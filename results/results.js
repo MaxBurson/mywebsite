@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Supabase client
+    const SUPABASE_URL = 'https://ckvoydadpgnrcvuxgfat.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrdm95ZGFkcGducmN2dXhnZmF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg3NzI3MjAsImV4cCI6MjA1NDM0ODcyMH0.ieIoX2RxvZOBegmiZGNx2g_u0nq35I2';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const loadingMessage = document.getElementById('loadingMessage');
     const resultsContent = document.getElementById('resultsContent');
     const noResultsMessage = document.getElementById('noResultsMessage');
@@ -72,18 +77,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
 
-    function deleteAllData() {
-        // Clear all localStorage data
-        localStorage.removeItem('evaluationResponses');
-        localStorage.removeItem('evaluationSessions');
-        
-        // Show notification
-        showNotification('All evaluation data deleted successfully!');
-        
-        // Reload the page to show empty state
-        setTimeout(() => {
-            location.reload();
-        }, 1500);
+    async function deleteAllData() {
+        try {
+            // Delete all data from Supabase
+            const { error } = await supabase
+                .from('evaluations')
+                .delete()
+                .neq('id', 0); // Delete all rows (neq with impossible condition)
+
+            if (error) {
+                console.error('Error deleting from Supabase:', error);
+                alert('Error deleting data. Please try again.');
+                return;
+            }
+
+            // Also clear localStorage
+            localStorage.removeItem('evaluationResponses');
+            localStorage.removeItem('evaluationSessions');
+            
+            // Show notification
+            showNotification('All evaluation data deleted successfully!');
+            
+            // Reload the page to show empty state
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } catch (err) {
+            console.error('Exception deleting data:', err);
+            alert('Error deleting data. Please try again.');
+        }
     }
 
     function showNotification(message) {
@@ -143,18 +165,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    function loadResults() {
-        setTimeout(() => {
-            const evaluationData = JSON.parse(localStorage.getItem('evaluationResponses') || '[]');
-            const sessionData = JSON.parse(localStorage.getItem('evaluationSessions') || '{}');
+    async function loadResults() {
+        try {
+            // Fetch data from Supabase
+            const { data: evaluations, error } = await supabase
+                .from('evaluations')
+                .select('*')
+                .order('timestamp', { ascending: false });
 
-            if (evaluationData.length === 0) {
+            if (error) {
+                console.error('Error fetching from Supabase:', error);
                 showNoResults();
                 return;
             }
 
-            displayResults(evaluationData, sessionData);
-        }, 500);
+            console.log('Fetched evaluations from Supabase:', evaluations);
+
+            if (!evaluations || evaluations.length === 0) {
+                showNoResults();
+            } else {
+                // Convert Supabase format to match existing format
+                const formattedEvaluations = evaluations.map(e => ({
+                    sessionId: e.session_id,
+                    participantName: e.participant_name,
+                    timestamp: e.timestamp,
+                    responses: {
+                        response_quality: e.response_quality,
+                        consistency_character: e.consistency_character,
+                        context_awareness: e.context_awareness,
+                        engagement: e.engagement,
+                        responsiveness: e.responsiveness,
+                        problems_issues: e.problems_issues
+                    }
+                }));
+
+                displayResults(formattedEvaluations, {});
+            }
+        } catch (err) {
+            console.error('Exception loading results:', err);
+            showNoResults();
+        }
     }
 
     function showNoResults() {

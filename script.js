@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Supabase client
+    const SUPABASE_URL = 'https://ckvoydadpgnrcvuxgfat.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrdm95ZGFkcGducmN2dXhnZmF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg3NzI3MjAsImV4cCI6MjA1NDM0ODcyMH0.ieIoX2RxvZOBegmiZGNx2g_u0nq35I2';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const nameInputContainer = document.getElementById('nameInputContainer');
     const participantNameInput = document.getElementById('participantNameInput');
     const startEvaluationBtn = document.getElementById('startEvaluationBtn');
@@ -13,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const completionMessage = document.getElementById('completionMessage');
     const finalCompletionMessage = document.getElementById('finalCompletionMessage');
     const evaluationContainer = document.getElementById('evaluationContainer');
-    const sessionButtons = document.querySelectorAll('.session-btn');
+    let sessionButtons = document.querySelectorAll('.session-btn');
 
     let currentQuestionIndex = 0;
     let currentSession = null;
@@ -230,8 +235,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function createNewSession() {
-        // Save current session if it has data
-        if (currentSession !== null && Object.keys(responses).length > 0) {
+        // Save current session if it has data and hasn't been completed yet
+        if (currentSession !== null && Object.keys(responses).length > 0 && !completedSessions.includes(currentSession)) {
             completeSession();
         }
 
@@ -262,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Update session buttons reference
+        // Update session buttons reference (use let instead of reassigning const)
         sessionButtons = document.querySelectorAll('.session-btn');
         
         // Go back to name input screen for new participant
@@ -486,16 +491,46 @@ document.addEventListener('DOMContentLoaded', function() {
         nextButton.disabled = false;
     }
 
-    function completeSession() {
+    async function completeSession() {
         const evaluationData = {
-            sessionId: currentSession,
-            participantName: currentParticipantName,
+            session_id: currentSession,
+            participant_name: currentParticipantName,
             timestamp: new Date().toISOString(),
-            responses: responses
+            response_quality: responses.response_quality || null,
+            consistency_character: responses.consistency_character || null,
+            context_awareness: responses.context_awareness || null,
+            engagement: responses.engagement || null,
+            responsiveness: responses.responsiveness || null,
+            problems_issues: responses.problems_issues || null
         };
 
+        try {
+            // Save to Supabase
+            const { data, error } = await supabase
+                .from('evaluations')
+                .insert([evaluationData]);
+
+            if (error) {
+                console.error('Error saving to Supabase:', error);
+                alert('Error saving evaluation. Please try again.');
+                return;
+            }
+
+            console.log('Successfully saved to Supabase:', data);
+        } catch (err) {
+            console.error('Exception saving to Supabase:', err);
+            alert('Error saving evaluation. Please try again.');
+            return;
+        }
+
+        // Also keep localStorage as backup
         let allEvaluations = JSON.parse(localStorage.getItem('evaluationResponses') || '[]');
-        allEvaluations.push(evaluationData);
+        allEvaluations.push({
+            sessionId: currentSession,
+            participantName: currentParticipantName,
+            timestamp: evaluationData.timestamp,
+            responses: responses
+        });
         localStorage.setItem('evaluationResponses', JSON.stringify(allEvaluations));
 
         if (!completedSessions.includes(currentSession)) {
