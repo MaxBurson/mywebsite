@@ -35,6 +35,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const questions = [
         {
+            id: 'conversation_completed',
+            text: 'Did you complete the conversation with the NPC?',
+            type: 'yes_no',
+            required: true
+        },
+        {
+            id: 'door_opened',
+            text: 'Did the door open?',
+            type: 'yes_no_na',
+            required: true
+        },
+        {
             id: 'response_quality',
             text: 'How would you rate the clarity, relevance, and usefulness of the NPC\'s responses?',
             type: 'rating',
@@ -69,10 +81,26 @@ document.addEventListener('DOMContentLoaded', function() {
             text: 'Did the NPC repeat itself, forget things, hallucinate information, or behave in a confusing way?',
             type: 'text',
             required: false
+        },
+        {
+            id: 'additional_details',
+            text: 'Please provide any additional details or feedback about your experience with this NPC.',
+            type: 'text',
+            required: false
         }
     ];
 
     const questionLabels = {
+        'conversation_completed': {
+            label: 'Conversation Completed',
+            low: 'No',
+            high: 'Yes'
+        },
+        'door_opened': {
+            label: 'Door Opened',
+            low: 'No',
+            high: 'Yes'
+        },
         'response_quality': {
             label: 'Response Quality',
             low: 'Least Clear/Useful',
@@ -467,6 +495,60 @@ document.addEventListener('DOMContentLoaded', function() {
             ratingContainer.appendChild(ratingScale);
             answerContainer.appendChild(ratingContainer);
             
+        } else if (question.type === 'yes_no') {
+            const yesNoContainer = document.createElement('div');
+            yesNoContainer.className = 'yes-no-container';
+            
+            const yesNoOptions = document.createElement('div');
+            yesNoOptions.className = 'yes-no-options';
+            
+            ['Yes', 'No'].forEach(option => {
+                const optionBtn = document.createElement('button');
+                optionBtn.className = 'yes-no-btn';
+                optionBtn.textContent = option;
+                optionBtn.addEventListener('click', function() {
+                    responses[question.id] = option;
+                    nextButton.disabled = false;
+                    
+                    // Visual feedback
+                    document.querySelectorAll('.yes-no-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+                yesNoOptions.appendChild(optionBtn);
+            });
+            
+            yesNoContainer.appendChild(yesNoOptions);
+            answerContainer.appendChild(yesNoContainer);
+            
+        } else if (question.type === 'yes_no_na') {
+            const yesNoNaContainer = document.createElement('div');
+            yesNoNaContainer.className = 'yes-no-container';
+            
+            const yesNoNaOptions = document.createElement('div');
+            yesNoNaOptions.className = 'yes-no-options';
+            
+            ['Yes', 'No', 'Not Applicable'].forEach(option => {
+                const optionBtn = document.createElement('button');
+                optionBtn.className = 'yes-no-btn';
+                optionBtn.textContent = option;
+                optionBtn.addEventListener('click', function() {
+                    responses[question.id] = option;
+                    nextButton.disabled = false;
+                    
+                    // Visual feedback
+                    document.querySelectorAll('.yes-no-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+                yesNoNaOptions.appendChild(optionBtn);
+            });
+            
+            yesNoNaContainer.appendChild(yesNoNaOptions);
+            answerContainer.appendChild(yesNoNaContainer);
+            
         } else if (question.type === 'text') {
             const textArea = document.createElement('textarea');
             textArea.id = question.id;
@@ -502,12 +584,15 @@ document.addEventListener('DOMContentLoaded', function() {
             session_id: currentSession,
             participant_name: currentParticipantName,
             timestamp: new Date().toISOString(),
+            conversation_completed: responses.conversation_completed || null,
+            door_opened: responses.door_opened || null,
             response_quality: responses.response_quality || null,
             consistency_character: responses.consistency_character || null,
             context_awareness: responses.context_awareness || null,
             engagement: responses.engagement || null,
             responsiveness: responses.responsiveness || null,
-            problems_issues: responses.problems_issues || null
+            problems_issues: responses.problems_issues || null,
+            additional_details: responses.additional_details || null
         };
 
         try {

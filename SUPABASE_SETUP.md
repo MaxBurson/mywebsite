@@ -10,12 +10,15 @@ CREATE TABLE evaluations (
   session_id INTEGER NOT NULL,
   participant_name TEXT NOT NULL,
   timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  conversation_completed TEXT,
+  door_opened TEXT,
   response_quality INTEGER,
   consistency_character INTEGER,
   context_awareness INTEGER,
   engagement INTEGER,
   responsiveness INTEGER,
   problems_issues TEXT,
+  additional_details TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

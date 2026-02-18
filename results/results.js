@@ -138,6 +138,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const questionLabels = {
+        'conversation_completed': {
+            label: 'Conversation Completed',
+            low: 'No',
+            high: 'Yes'
+        },
+        'door_opened': {
+            label: 'Door Opened',
+            low: 'No',
+            high: 'Yes'
+        },
         'response_quality': {
             label: 'Response Quality',
             low: 'Least Clear/Useful',
@@ -190,12 +200,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     participantName: e.participant_name,
                     timestamp: e.timestamp,
                     responses: {
+                        conversation_completed: e.conversation_completed,
+                        door_opened: e.door_opened,
                         response_quality: e.response_quality,
                         consistency_character: e.consistency_character,
                         context_awareness: e.context_awareness,
                         engagement: e.engagement,
                         responsiveness: e.responsiveness,
-                        problems_issues: e.problems_issues
+                        problems_issues: e.problems_issues,
+                        additional_details: e.additional_details
                     }
                 }));
 

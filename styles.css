@@ -335,13 +335,51 @@ body {
 }
 
 .text-answer::placeholder {
-color: #888888;
-font-style: italic;
+    color: #888888;
+    font-style: italic;
+}
+
+.yes-no-container {
+    width: 100%;
+    margin: 20px 0;
+}
+
+.yes-no-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.yes-no-btn {
+    min-width: 120px;
+    padding: 15px 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Gilroy-Bold', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.yes-no-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+
+.yes-no-btn.selected {
+    background: rgba(100, 255, 100, 0.3);
+    border-color: rgba(100, 255, 100, 0.5);
+    color: #64ff64;
+    box-shadow: 0 0 20px rgba(100, 255, 100, 0.2);
 }
 
 .next-btn {
-width: 100%;
-padding: 20px;
+    width: 100%;
 background: rgba(255, 255, 255, 0.1);
 color: #ffffff;
 border: 2px solid rgba(255, 255, 255, 0.3);
