@@ -557,10 +557,13 @@ document.addEventListener('DOMContentLoaded', function() {
             textArea.rows = 4;
             textArea.addEventListener('input', function() {
                 responses[question.id] = this.value;
-                // Enable next button if there's content (optional question)
-                nextButton.disabled = false;
             });
             answerContainer.appendChild(textArea);
+            
+            // Enable next button immediately for optional questions
+            if (!question.required) {
+                nextButton.disabled = false;
+            }
         }
     }
 
