@@ -445,7 +445,13 @@ document.addEventListener('DOMContentLoaded', function() {
         questionText.textContent = question.text;
         
         answerContainer.innerHTML = '';
-        nextButton.disabled = true;
+        
+        // Only disable next button for required questions
+        if (question.required) {
+            nextButton.disabled = true;
+        } else {
+            nextButton.disabled = false;
+        }
 
         if (question.type === 'rating') {
             const ratingContainer = document.createElement('div');
@@ -559,11 +565,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 responses[question.id] = this.value;
             });
             answerContainer.appendChild(textArea);
-            
-            // Enable next button immediately for optional questions
-            if (!question.required) {
-                nextButton.disabled = false;
-            }
         }
     }
 
