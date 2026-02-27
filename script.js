@@ -47,6 +47,12 @@ document.addEventListener('DOMContentLoaded', function() {
             required: true
         },
         {
+            id: 'bribe_difficulty',
+            text: 'How difficult was it to find out what the NPC\'s bribe was?',
+            type: 'rating',
+            required: true
+        },
+        {
             id: 'response_quality',
             text: 'How would you rate the clarity, relevance, and usefulness of the NPC\'s responses?',
             type: 'rating',
@@ -100,6 +106,11 @@ document.addEventListener('DOMContentLoaded', function() {
             label: 'Door Opened',
             low: 'No',
             high: 'Yes'
+        },
+        'bribe_difficulty': {
+            label: 'Bribe Difficulty',
+            low: 'Very Easy',
+            high: 'Very Difficult'
         },
         'response_quality': {
             label: 'Response Quality',
