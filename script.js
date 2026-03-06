@@ -595,8 +595,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function completeSession() {
+        // Map session 8 to session 9 in the database (hard-coded NPC vs previous LLM)
+        const dbSessionId = currentSession === 8 ? 9 : currentSession;
+        
         const evaluationData = {
-            session_id: currentSession,
+            session_id: dbSessionId,
             participant_name: currentParticipantName,
             timestamp: new Date().toISOString(),
             conversation_completed: responses.conversation_completed || null,
